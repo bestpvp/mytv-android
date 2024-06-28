@@ -19,7 +19,7 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "top.bestpvp.tmtv"
+        applicationId = "com.bestpvp.tmtv"
         minSdk = 21
         targetSdk = 34
         versionCode = 240628
