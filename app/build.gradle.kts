@@ -19,11 +19,11 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "top.yogiczy.mytv"
+        applicationId = "top.bestpvp.tmtv"
         minSdk = 21
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.4.1"
+        versionCode = 240628
+        versionName = "240628"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

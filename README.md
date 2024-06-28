@@ -1,5 +1,5 @@
 <div align="center">
-    <h1>我的电视</h1>
+    <h1>时光TV</h1>
 <div align="center">
 
 ![GitHub repo size](https://img.shields.io/github/repo-size/yaoxieyoulei/mytv-android)
@@ -118,7 +118,7 @@
 
 ## 声明
 
-此项目（我的电视）是个人为了兴趣而开发, 仅用于学习和测试。 所用API皆从官方网站收集, 不提供任何破解内容。
+此项目（时光TV）是个人为了兴趣而开发, 仅用于学习和测试。 所用API皆从官方网站收集, 不提供任何破解内容。
 
 ## 致谢
 

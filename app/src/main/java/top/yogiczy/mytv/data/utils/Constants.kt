@@ -7,7 +7,7 @@ object Constants {
     /**
      * 应用 标题
      */
-    const val APP_TITLE = "我的电视"
+    const val APP_TITLE = "时光TV - 致敬《我的电视》"
 
     /**
      * 应用 代码仓库
@@ -15,11 +15,23 @@ object Constants {
     const val APP_REPO = "https://github.com/yaoxieyoulei/mytv-android"
 
     /**
+     * 应用 公众号名称
+     */
+    const val WECHAT_NAME = "插兜的干货仓库"
+
+    /**
+     * 应用 公众号URL
+     */
+    const val WECHAT_URL = "https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzUyNzg2NTM5Ng=="
+
+    /**
      * IPTV源地址
      */
-    const val IPTV_SOURCE_URL =
-        "https://mirror.ghproxy.com/https://fanmingming.com/txt?url=https://raw.githubusercontent.com/fanmingming/live/main/tv/m3u/ipv6.m3u"
+    // const val IPTV_SOURCE_URL =
+    //     "https://mirror.ghproxy.com/https://fanmingming.com/txt?url=https://raw.githubusercontent.com/fanmingming/live/main/tv/m3u/ipv6.m3u"
 
+    const val IPTV_SOURCE_URL =
+        "https://live.fanmingming.com/tv/m3u/ipv6.m3u"
     /**
      * IPTV源缓存时间（毫秒）
      */

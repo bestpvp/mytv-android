@@ -37,6 +37,13 @@ fun LeanbackSettingsCategoryAbout(
 
         item {
             LeanbackSettingsCategoryListItem(
+                headlineContent = "原版仓库",
+                trailingContent = Constants.APP_REPO,
+            )
+        }
+
+        item {
+            LeanbackSettingsCategoryListItem(
                 headlineContent = "应用版本",
                 trailingContent = packageInfo.versionName,
             )
@@ -46,14 +53,14 @@ fun LeanbackSettingsCategoryAbout(
             var showQrDialog by remember { mutableStateOf(false) }
 
             LeanbackSettingsCategoryListItem(
-                headlineContent = "代码仓库",
-                trailingContent = Constants.APP_REPO,
+                headlineContent = "关注公众号",
+                trailingContent = Constants.WECHAT_NAME,
                 onSelected = { showQrDialog = true },
             )
 
             LeanbackQrcodeDialog(
-                text = Constants.APP_REPO,
-                description = "扫码前往代码仓库",
+                text = Constants.WECHAT_URL,
+                description = "扫码前往公众号首页",
                 showDialogProvider = { showQrDialog },
                 onDismissRequest = { showQrDialog = false },
             )
