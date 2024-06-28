@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import top.yogiczy.mytv.data.entities.EpgProgrammeCurrent
 import top.yogiczy.mytv.data.entities.Iptv
 import top.yogiczy.mytv.ui.theme.LeanbackTheme
+import top.yogiczy.mytv.utils.Custom
 import top.yogiczy.mytv.utils.isIPv6
 
 @Composable
@@ -81,6 +82,11 @@ fun LeanbackPanelIptvInfo(
             LocalTextStyle provides MaterialTheme.typography.bodyLarge,
             LocalContentColor provides LocalContentColor.current.copy(alpha = 0.8f),
         ) {
+            Text(
+                // text = "公众号：插兜的干货仓库",
+                text = Custom.getWechatName(),
+                maxLines = 1,
+            )
             Text(
                 text = "正在播放：${currentProgrammes?.now?.title ?: "无节目"}",
                 maxLines = 1,

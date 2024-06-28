@@ -25,7 +25,7 @@ enum class LeanbackSettingsCategories(
     EPG(Icons.Default.Menu, "节目单"),
     UI(Icons.Default.DisplaySettings, "界面"),
     FAVORITE(Icons.Default.Star, "收藏"),
-    UPDATE(Icons.Default.Update, "更新"),
+    // UPDATE(Icons.Default.Update, "更新"),
     VIDEO_PLAYER(Icons.Default.SmartDisplay, "播放器"),
     HTTP(Icons.Default.Http, "网络"),
     DEBUG(Icons.Default.BugReport, "调试"),

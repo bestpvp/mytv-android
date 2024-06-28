@@ -62,17 +62,17 @@ fun LeanbackSettingsCategoryApp(
             )
         }
 
-        item {
-            LeanbackSettingsCategoryListItem(
-                headlineContent = "应用更新",
-                supportingContent = "最新版本：v${updateViewModel.latestRelease.version}",
-                trailingContent = if (updateViewModel.isUpdateAvailable) "发现新版本" else "无更新",
-                onSelected = {
-                    if (updateViewModel.isUpdateAvailable)
-                        updateViewModel.showDialog = true
-                },
-            )
-        }
+        // item {
+        //     LeanbackSettingsCategoryListItem(
+        //         headlineContent = "应用更新",
+        //         supportingContent = "最新版本：v${updateViewModel.latestRelease.version}",
+        //         trailingContent = if (updateViewModel.isUpdateAvailable) "发现新版本" else "无更新",
+        //         onSelected = {
+        //             if (updateViewModel.isUpdateAvailable)
+        //                 updateViewModel.showDialog = true
+        //         },
+        //     )
+        // }
     }
 }
 
