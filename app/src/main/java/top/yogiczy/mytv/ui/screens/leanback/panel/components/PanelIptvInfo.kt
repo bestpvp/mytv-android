@@ -84,7 +84,7 @@ fun LeanbackPanelIptvInfo(
         ) {
             Text(
                 // text = "公众号：插兜的干货仓库",
-                text = Custom.getWechatName(),
+                text = "公众号: "+Custom.getWechatName(),
                 maxLines = 1,
             )
             Text(
