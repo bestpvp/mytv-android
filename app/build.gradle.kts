@@ -22,8 +22,8 @@ android {
         applicationId = "com.bestpvp.tmtv"
         minSdk = 21
         targetSdk = 34
-        versionCode = 240628
-        versionName = "240628"
+        versionCode = 240629
+        versionName = "240629"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
