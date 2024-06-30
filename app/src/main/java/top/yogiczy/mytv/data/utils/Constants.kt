@@ -7,7 +7,7 @@ object Constants {
     /**
      * 应用 标题
      */
-    const val APP_TITLE = "时光TV - 致敬《我的电视》"
+    const val APP_TITLE = "时光未央 - 致敬《我的电视》"
 
     /**
      * 应用 代码仓库
@@ -50,8 +50,12 @@ object Constants {
     /**
      * Git最新版本信息
      */
+    // const val GIT_RELEASE_LATEST_URL =
+    //     "https://api.github.com/repos/yaoxieyoulei/mytv-android/releases/latest"
+
     const val GIT_RELEASE_LATEST_URL =
-        "https://api.github.com/repos/yaoxieyoulei/mytv-android/releases/latest"
+        "https://mirror.ghproxy.com/https://raw.githubusercontent.com/bestpvp/config/main/update/tmtv/update.json"
+
 
     /**
      * GitHub加速代理地址

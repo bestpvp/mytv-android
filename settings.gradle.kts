@@ -19,6 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "时光TV"
+rootProject.name = "时光未央"
 include(":app")
  

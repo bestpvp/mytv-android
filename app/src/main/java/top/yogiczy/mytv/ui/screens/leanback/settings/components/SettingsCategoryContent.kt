@@ -30,7 +30,7 @@ fun LeanbackSettingsCategoryContent(
             LeanbackSettingsCategories.EPG -> LeanbackSettingsCategoryEpg()
             LeanbackSettingsCategories.UI -> LeanbackSettingsCategoryUI()
             LeanbackSettingsCategories.FAVORITE -> LeanbackSettingsCategoryFavorite()
-            // LeanbackSettingsCategories.UPDATE -> LeanbackSettingsCategoryUpdate()
+            LeanbackSettingsCategories.UPDATE -> LeanbackSettingsCategoryUpdate()
             LeanbackSettingsCategories.VIDEO_PLAYER -> LeanbackSettingsCategoryVideoPlayer()
             LeanbackSettingsCategories.HTTP -> LeanbackSettingsCategoryHttp()
             LeanbackSettingsCategories.DEBUG -> LeanbackSettingsCategoryDebug()

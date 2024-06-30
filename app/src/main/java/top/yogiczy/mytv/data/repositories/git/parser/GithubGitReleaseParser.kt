@@ -9,14 +9,14 @@ import top.yogiczy.mytv.data.utils.Constants
 
 class GithubGitReleaseParser : GitReleaseParser {
     override fun isSupport(url: String): Boolean {
-        return url.contains("github.com")
+        return url.contains("raw.githubusercontent.com")
     }
 
     override suspend fun parse(data: String): GitRelease {
         val json = Json.parseToJsonElement(data).jsonObject
 
         return GitRelease(
-            version = json.getValue("tag_name").jsonPrimitive.content.substring(1),
+            version = json.getValue("tag_name").jsonPrimitive.content,
             downloadUrl = Constants.GITHUB_PROXY + json.getValue("assets").jsonArray[0].jsonObject["browser_download_url"]!!.jsonPrimitive.content,
             description = json.getValue("body").jsonPrimitive.content
         )

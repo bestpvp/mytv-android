@@ -14,6 +14,7 @@ import androidx.compose.ui.window.DialogProperties
 import top.yogiczy.mytv.data.entities.GitRelease
 import top.yogiczy.mytv.ui.theme.LeanbackTheme
 import top.yogiczy.mytv.ui.utils.handleLeanbackKeyEvents
+import top.yogiczy.mytv.utils.Custom
 
 @Composable
 fun LeanbackUpdateDialog(
@@ -58,10 +59,13 @@ fun LeanbackUpdateDialog(
                 }
             },
             title = {
-                Text(text = "新版本：v${release.version}")
+                Text(text = "发现新版本：v${release.version}")
             },
             text = {
                 LazyColumn {
+                    item {
+                        Text(text = "关注公众号: "+Custom.getWechatName()+"\n")
+                    }
                     item {
                         Text(text = release.description)
                     }
