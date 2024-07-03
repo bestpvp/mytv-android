@@ -35,7 +35,7 @@
             <template v-if="settings">
                 <div class="p-20px pt-0">
                     <div class="ml-16px text-32px">{{ settings.appTitle }}</div>
-                    <div class="ml-16px text-gray text-14px">{{ settings.appRepo }}</div>
+                    <div class="ml-16px text-gray text-14px">{{ "关注公众号：" + settings.wechat }}</div>
                 </div>
 
                 <template v-if="tabActive === 'config'">

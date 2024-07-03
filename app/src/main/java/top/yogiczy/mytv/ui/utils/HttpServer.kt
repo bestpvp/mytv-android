@@ -98,6 +98,7 @@ object HttpServer : Loggable() {
                     AllSettings(
                         appTitle = Constants.APP_TITLE,
                         appRepo = Constants.APP_REPO,
+                        wechat = Constants.WECHAT_NAME,
                         iptvSourceUrl = SP.iptvSourceUrl,
                         epgXmlUrl = SP.epgXmlUrl,
                         videoPlayerUserAgent = SP.videoPlayerUserAgent,
@@ -192,6 +193,7 @@ object HttpServer : Loggable() {
 private data class AllSettings(
     val appTitle: String,
     val appRepo: String,
+    val wechat: String,
     val iptvSourceUrl: String,
     val epgXmlUrl: String,
     val videoPlayerUserAgent: String,
