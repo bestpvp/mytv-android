@@ -40,7 +40,7 @@ fun LeanbackVideoPlayerErrorScreen(
                 )
 
                 Text(
-                    text = "你的网络可能不支持ipv6",
+                    text = "你的网络可能受限, 请检查网络状态或ipv6支持情况",
                     style = MaterialTheme.typography.bodySmall,
                     color = LocalContentColor.current.copy(alpha = 0.8f),
                 )

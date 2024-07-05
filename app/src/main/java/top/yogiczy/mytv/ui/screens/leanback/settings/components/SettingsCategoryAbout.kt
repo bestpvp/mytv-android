@@ -31,7 +31,7 @@ fun LeanbackSettingsCategoryAbout(
         item {
             LeanbackSettingsCategoryListItem(
                 headlineContent = "应用名称",
-                trailingContent = Constants.APP_TITLE,
+                trailingContent = Constants.APP_TITLE+" - 致敬《我的电视》",
             )
         }
 

@@ -7,7 +7,7 @@ object Constants {
     /**
      * 应用 标题
      */
-    const val APP_TITLE = "时光未央 - 致敬《我的电视》"
+    const val APP_TITLE = "时光未央"
 
     /**
      * 应用 代码仓库
@@ -36,6 +36,11 @@ object Constants {
      * IPTV源缓存时间（毫秒）
      */
     const val IPTV_SOURCE_CACHE_TIME = 1000 * 60 * 60 * 24L // 24小时
+
+    /**
+     * 插入的节目
+     */
+    const val INSERT_SOURCE_URL = "https://gitee.com/bestpvp/config/raw/master/cut/start.mp4"
 
     /**
      * 节目单XML地址

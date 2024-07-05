@@ -12,6 +12,7 @@ import top.yogiczy.mytv.data.entities.IptvGroupList.Companion.iptvIdx
 import top.yogiczy.mytv.data.entities.IptvList
 import top.yogiczy.mytv.data.repositories.FileCacheRepository
 import top.yogiczy.mytv.data.repositories.iptv.parser.IptvParser
+import top.yogiczy.mytv.data.utils.Constants
 import top.yogiczy.mytv.utils.Logger
 
 /**
@@ -70,10 +71,10 @@ class IptvRepository : FileCacheRepository("iptv.txt") {
 
             // 动态添加新的频道
             val newChannel = Iptv(
-                name = "时光未央",
-                channelName = "时光未央",
+                name = Constants.APP_TITLE,
+                channelName = Constants.APP_TITLE,
                 urlList = listOf(
-                    "https://gitee.com/bestpvp/config/raw/master/config/start.mp4",
+                    Constants.INSERT_SOURCE_URL,
                     // "https://mirror.ghproxy.com/https://raw.githubusercontent.com/bestpvp/config/main/cut/test.m3u",
                 )
             )

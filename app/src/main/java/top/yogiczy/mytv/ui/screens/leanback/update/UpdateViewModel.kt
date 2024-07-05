@@ -37,7 +37,7 @@ class LeanBackUpdateViewModel : ViewModel() {
             _latestRelease = GitRepository().latestRelease(Constants.GIT_RELEASE_LATEST_URL)
             _isUpdateAvailable = _latestRelease.version.compareVersion(currentVersion) > 0
         } catch (e: Exception) {
-            LeanbackToastState.I.showToast("检查更新失败")
+            LeanbackToastState.I.showToast("检查更新失败: ${e.message.toString()}")
         } finally {
             _isChecking = false
         }
