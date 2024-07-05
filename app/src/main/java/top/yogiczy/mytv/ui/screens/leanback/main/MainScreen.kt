@@ -38,9 +38,11 @@ import top.yogiczy.mytv.ui.screens.leanback.components.LeanbackVisible
 import top.yogiczy.mytv.ui.screens.leanback.main.components.LeanbackBackPressHandledArea
 import top.yogiczy.mytv.ui.screens.leanback.main.components.LeanbackMainContent
 import top.yogiczy.mytv.ui.screens.leanback.settings.LeanbackSettingsScreen
+import top.yogiczy.mytv.ui.screens.leanback.toast.LeanbackToastState
 import top.yogiczy.mytv.ui.theme.LeanbackTheme
 import top.yogiczy.mytv.ui.utils.HttpServer
 import top.yogiczy.mytv.ui.utils.handleLeanbackKeyEvents
+import top.yogiczy.mytv.utils.Custom
 
 @Composable
 fun LeanbackMainScreen(
@@ -60,6 +62,7 @@ fun LeanbackMainScreen(
 
         is LeanbackMainUiState.Loading -> LeanbackMainSettingsHandle(onBackPressed = onBackPressed) {
             LeanbackMainScreenLoading { s.message }
+            LeanbackToastState.I.showToast("数据源已加载完成!")
         }
 
         is LeanbackMainUiState.Error -> LeanbackMainSettingsHandle(onBackPressed = onBackPressed) {
@@ -79,7 +82,7 @@ private fun LeanbackMainScreenLoading(messageProvider: () -> String?) {
                 .padding(start = childPadding.start, bottom = childPadding.bottom),
         ) {
             Text(
-                text = "加载中...",
+                text = "关注公众号: "+ Custom.getWechatName() +" 加载中...",
                 style = MaterialTheme.typography.headlineSmall,
                 color = MaterialTheme.colorScheme.onBackground,
             )

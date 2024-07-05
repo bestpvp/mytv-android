@@ -57,6 +57,37 @@ fun LeanbackSettingsCategoryIptv(
         contentPadding = PaddingValues(vertical = 10.dp),
     ) {
         item {
+            var showDialog by remember { mutableStateOf(false) }
+
+            LeanbackSettingsCategoryListItem(
+                headlineContent = "直播源设置",
+                supportingContent = if (settingsViewModel.iptvSourceUrl != Constants.IPTV_SOURCE_URL) settingsViewModel.iptvSourceUrl else null,
+                trailingContent = if (settingsViewModel.iptvSourceUrl != Constants.IPTV_SOURCE_URL) "已启用" else "未启用",
+                onSelected = { showDialog = true },
+                remoteConfig = true,
+            )
+
+            LeanbackSettingsIptvSourceHistoryDialog(showDialogProvider = { showDialog },
+                onDismissRequest = { showDialog = false },
+                iptvSourceHistoryProvider = {
+                    settingsViewModel.iptvSourceUrlHistoryList.filter {
+                        it != Constants.IPTV_SOURCE_URL
+                    }.toImmutableList()
+                },
+                currentIptvSourceProvider = { settingsViewModel.iptvSourceUrl },
+                onSelected = {
+                    showDialog = false
+                    if (settingsViewModel.iptvSourceUrl != it) {
+                        settingsViewModel.iptvSourceUrl = it
+                        coroutineScope.launch { IptvRepository().clearCache() }
+                    }
+                },
+                onDeleted = {
+                    settingsViewModel.iptvSourceUrlHistoryList -= it
+                })
+        }
+
+        item {
             LeanbackSettingsCategoryListItem(
                 headlineContent = "数字选台",
                 supportingContent = "通过数字选择频道",
@@ -120,37 +151,6 @@ fun LeanbackSettingsCategoryIptv(
         }
 
         item {
-            var showDialog by remember { mutableStateOf(false) }
-
-            LeanbackSettingsCategoryListItem(
-                headlineContent = "自定义直播源",
-                supportingContent = if (settingsViewModel.iptvSourceUrl != Constants.IPTV_SOURCE_URL) settingsViewModel.iptvSourceUrl else null,
-                trailingContent = if (settingsViewModel.iptvSourceUrl != Constants.IPTV_SOURCE_URL) "已启用" else "未启用",
-                onSelected = { showDialog = true },
-                remoteConfig = true,
-            )
-
-            LeanbackSettingsIptvSourceHistoryDialog(showDialogProvider = { showDialog },
-                onDismissRequest = { showDialog = false },
-                iptvSourceHistoryProvider = {
-                    settingsViewModel.iptvSourceUrlHistoryList.filter {
-                        it != Constants.IPTV_SOURCE_URL
-                    }.toImmutableList()
-                },
-                currentIptvSourceProvider = { settingsViewModel.iptvSourceUrl },
-                onSelected = {
-                    showDialog = false
-                    if (settingsViewModel.iptvSourceUrl != it) {
-                        settingsViewModel.iptvSourceUrl = it
-                        coroutineScope.launch { IptvRepository().clearCache() }
-                    }
-                },
-                onDeleted = {
-                    settingsViewModel.iptvSourceUrlHistoryList -= it
-                })
-        }
-
-        item {
             LeanbackSettingsCategoryListItem(
                 headlineContent = "清除缓存",
                 supportingContent = "短按清除直播源缓存文件、可播放域名列表",
@@ -183,7 +183,7 @@ private fun LeanbackSettingsIptvSourceHistoryDialog(
             modifier = modifier,
             onDismissRequest = onDismissRequest,
             confirmButton = { Text(text = "短按切换；长按删除历史记录") },
-            title = { Text("历史直播源") },
+            title = { Text("直播源配置") },
             text = {
                 var hasFocused by remember { mutableStateOf(false) }
 
@@ -257,7 +257,7 @@ private fun LeanbackSettingsIptvSourceHistoryDialog(
                             selected = false,
                             onClick = {},
                             headlineContent = {
-                                androidx.tv.material3.Text("添加其他直播源")
+                                androidx.tv.material3.Text("添加自定义直播源")
                             },
                         )
 

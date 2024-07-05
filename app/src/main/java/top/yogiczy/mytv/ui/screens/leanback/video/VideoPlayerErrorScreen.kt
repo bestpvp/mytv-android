@@ -40,6 +40,12 @@ fun LeanbackVideoPlayerErrorScreen(
                 )
 
                 Text(
+                    text = "你的网络可能不支持ipv6",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = LocalContentColor.current.copy(alpha = 0.8f),
+                )
+
+                Text(
                     text = error,
                     style = MaterialTheme.typography.bodySmall,
                     color = LocalContentColor.current.copy(alpha = 0.8f),

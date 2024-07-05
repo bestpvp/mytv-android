@@ -223,7 +223,7 @@ private fun LeanbackSettingsEpgSourceHistoryDialog(
                             selected = false,
                             onClick = {},
                             headlineContent = {
-                                androidx.tv.material3.Text("添加其他节目单")
+                                androidx.tv.material3.Text("添加自定义节目单")
                             },
                         )
 
