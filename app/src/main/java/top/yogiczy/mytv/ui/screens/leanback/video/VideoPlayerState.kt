@@ -8,6 +8,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
@@ -20,7 +21,10 @@ import top.yogiczy.mytv.ui.screens.leanback.video.player.LeanbackVideoPlayer
  * 播放器状态
  */
 @Stable
-class LeanbackVideoPlayerState(private val instance: LeanbackVideoPlayer) {
+class LeanbackVideoPlayerState(
+    private val instance: LeanbackVideoPlayer,
+    private val defaultAspectRatioProvider: () -> Float? = { null },
+) {
     /** 视频宽高比 */
     var aspectRatio by mutableFloatStateOf(16f / 9f)
 
@@ -49,6 +53,7 @@ class LeanbackVideoPlayerState(private val instance: LeanbackVideoPlayer) {
 
     private val onReadyListeners = mutableListOf<() -> Unit>()
     private val onErrorListeners = mutableListOf<() -> Unit>()
+    private val onCutoffListeners = mutableListOf<() -> Unit>()
 
     fun onReady(listener: () -> Unit) {
         onReadyListeners.add(listener)
@@ -58,31 +63,33 @@ class LeanbackVideoPlayerState(private val instance: LeanbackVideoPlayer) {
         onErrorListeners.add(listener)
     }
 
+    fun onCutoff(listener: () -> Unit) {
+        onCutoffListeners.add(listener)
+    }
+
     fun initialize() {
         instance.initialize()
         instance.onResolution { width, height ->
-            if (width > 0 && height > 0) {
-                aspectRatio = width.toFloat() / height
+            val defaultAspectRatio = defaultAspectRatioProvider()
+
+            if (defaultAspectRatio == null) {
+                if (width > 0 && height > 0) aspectRatio = width.toFloat() / height
+            } else {
+                aspectRatio = defaultAspectRatio
             }
         }
         instance.onError { ex ->
             error = if (ex != null) "${ex.errorCodeName}(${ex.errorCode})"
             else null
 
-            if (error != null) {
-                onErrorListeners.forEach { it.invoke() }
-            }
+            if (error != null) onErrorListeners.forEach { it.invoke() }
+
         }
-        instance.onReady {
-            onReadyListeners.forEach { it.invoke() }
-        }
-        instance.onBuffering {
-            if (it) {
-                error = null
-            }
-        }
+        instance.onReady { onReadyListeners.forEach { it.invoke() } }
+        instance.onBuffering { if (it) error = null }
         instance.onPrepared { }
         instance.onMetadata { metadata = it }
+        instance.onCutoff { onCutoffListeners.forEach { it.invoke() } }
     }
 
     fun release() {
@@ -93,11 +100,17 @@ class LeanbackVideoPlayerState(private val instance: LeanbackVideoPlayer) {
 }
 
 @Composable
-fun rememberLeanbackVideoPlayerState(): LeanbackVideoPlayerState {
+fun rememberLeanbackVideoPlayerState(
+    defaultAspectRatioProvider: () -> Float? = { null },
+): LeanbackVideoPlayerState {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
+    val coroutineScope = rememberCoroutineScope()
     val state = remember {
-        LeanbackVideoPlayerState(LeanbackMedia3VideoPlayer(context))
+        LeanbackVideoPlayerState(
+            LeanbackMedia3VideoPlayer(context, coroutineScope),
+            defaultAspectRatioProvider = defaultAspectRatioProvider,
+        )
     }
 
     DisposableEffect(Unit) {

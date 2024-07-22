@@ -100,6 +100,9 @@ object SP {
         /** 时间显示模式 */
         UI_TIME_SHOW_MODE,
 
+        /** 画中画模式 */
+        UI_PIP_MODE,
+
         /** ==================== 更新 ==================== */
         /** 更新强提醒（弹窗形式） */
         UPDATE_FORCE_REMIND,
@@ -107,6 +110,12 @@ object SP {
         /** ==================== 播放器 ==================== */
         /** 播放器 自定义ua */
         VIDEO_PLAYER_USER_AGENT,
+
+        /** 播放器 加载超时 */
+        VIDEO_PLAYER_LOAD_TIMEOUT,
+
+        /** 播放器 画面比例 */
+        VIDEO_PLAYER_ASPECT_RATIO,
     }
 
     /** ==================== 应用 ==================== */
@@ -241,6 +250,11 @@ object SP {
         get() = UiTimeShowMode.fromValue(sp.getInt(KEY.UI_TIME_SHOW_MODE.name, 0))
         set(value) = sp.edit().putInt(KEY.UI_TIME_SHOW_MODE.name, value.value).apply()
 
+    /** 画中画模式 */
+    var uiPipMode: Boolean
+        get() = sp.getBoolean(KEY.UI_PIP_MODE.name, false)
+        set(value) = sp.edit().putBoolean(KEY.UI_PIP_MODE.name, value).apply()
+
     /** ==================== 更新 ==================== */
     /** 更新强提醒（弹窗形式） */
     var updateForceRemind: Boolean
@@ -254,6 +268,18 @@ object SP {
             Constants.VIDEO_PLAYER_USER_AGENT
         }
         set(value) = sp.edit().putString(KEY.VIDEO_PLAYER_USER_AGENT.name, value).apply()
+
+    /** 播放器 加载超时 */
+    var videoPlayerLoadTimeout: Long
+        get() = sp.getLong(KEY.VIDEO_PLAYER_LOAD_TIMEOUT.name, Constants.VIDEO_PLAYER_LOAD_TIMEOUT)
+        set(value) = sp.edit().putLong(KEY.VIDEO_PLAYER_LOAD_TIMEOUT.name, value).apply()
+
+    /** 播放器 画面比例 */
+    var videoPlayerAspectRatio: VideoPlayerAspectRatio
+        get() = VideoPlayerAspectRatio.fromValue(
+            sp.getInt(KEY.VIDEO_PLAYER_ASPECT_RATIO.name, VideoPlayerAspectRatio.ORIGINAL.value)
+        )
+        set(value) = sp.edit().putInt(KEY.VIDEO_PLAYER_ASPECT_RATIO.name, value.value).apply()
 
     enum class UiTimeShowMode(val value: Int) {
         /** 隐藏 */
@@ -288,6 +314,26 @@ object SP {
         companion object {
             fun fromValue(value: Int): AppDeviceDisplayType {
                 return entries.firstOrNull { it.value == value } ?: LEANBACK
+            }
+        }
+    }
+
+    enum class VideoPlayerAspectRatio(val value: Int) {
+        /** 原始 */
+        ORIGINAL(0),
+
+        /** 16:9 */
+        SIXTEEN_NINE(1),
+
+        /** 4:3 */
+        FOUR_THREE(2),
+
+        /** 自动拉伸 */
+        AUTO(3);
+
+        companion object {
+            fun fromValue(value: Int): VideoPlayerAspectRatio {
+                return entries.firstOrNull { it.value == value } ?: ORIGINAL
             }
         }
     }

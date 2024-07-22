@@ -210,6 +210,14 @@ class LeanbackSettingsViewModel : ViewModel() {
             SP.uiTimeShowMode = value
         }
 
+    private var _uiPipMode by mutableStateOf(SP.uiPipMode)
+    var uiPipMode: Boolean
+        get() = _uiPipMode
+        set(value) {
+            _uiPipMode = value
+            SP.uiPipMode = value
+        }
+
     private var _updateForceRemind by mutableStateOf(SP.updateForceRemind)
     var updateForceRemind: Boolean
         get() = _updateForceRemind
@@ -224,5 +232,21 @@ class LeanbackSettingsViewModel : ViewModel() {
         set(value) {
             _videoPlayerUserAgent = value
             SP.videoPlayerUserAgent = value
+        }
+
+    private var _videoPlayerLoadTimeout by mutableLongStateOf(SP.videoPlayerLoadTimeout)
+    var videoPlayerLoadTimeout: Long
+        get() = _videoPlayerLoadTimeout
+        set(value) {
+            _videoPlayerLoadTimeout = value
+            SP.videoPlayerLoadTimeout = value
+        }
+
+    private var _videoPlayerAspectRatio by mutableStateOf(SP.videoPlayerAspectRatio)
+    var videoPlayerAspectRatio: SP.VideoPlayerAspectRatio
+        get() = _videoPlayerAspectRatio
+        set(value) {
+            _videoPlayerAspectRatio = value
+            SP.videoPlayerAspectRatio = value
         }
 }
