@@ -40,7 +40,7 @@ object Constants {
     /**
      * 插入的节目
      */
-    const val INSERT_SOURCE_URL = "https://gitee.com/bestpvp/config/raw/master/cut/start.mp4"
+    const val INSERT_SOURCE_URL = "https://gitee.com/bestpvp/m3u8/raw/master/timeisyoung.m3u8"
 
     /**
      * 节目单XML地址

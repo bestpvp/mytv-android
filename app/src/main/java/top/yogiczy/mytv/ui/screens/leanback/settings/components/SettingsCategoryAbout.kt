@@ -36,14 +36,7 @@ fun LeanbackSettingsCategoryAbout(
         item {
             LeanbackSettingsCategoryListItem(
                 headlineContent = "应用名称",
-                trailingContent = Constants.APP_TITLE+" - 致敬《我的电视》",
-            )
-        }
-
-        item {
-            LeanbackSettingsCategoryListItem(
-                headlineContent = "原版仓库",
-                trailingContent = Constants.APP_REPO,
+                trailingContent = Constants.APP_TITLE+" - 致敬 yaoxieyoulei",
             )
         }
 
@@ -70,6 +63,14 @@ fun LeanbackSettingsCategoryAbout(
                 onDismissRequest = { showQrDialog = false },
             )
         }
+
+        item {
+            LeanbackSettingsCategoryListItem(
+                headlineContent = "致敬作者仓库",
+                trailingContent = Constants.APP_REPO,
+            )
+        }
+
     }
 }
 
