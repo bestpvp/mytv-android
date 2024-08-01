@@ -62,7 +62,7 @@ fun LeanbackSettingsCategoryIptv(
             LeanbackSettingsCategoryListItem(
                 headlineContent = "直播源设置",
                 supportingContent = if (settingsViewModel.iptvSourceUrl != Constants.IPTV_SOURCE_URL) settingsViewModel.iptvSourceUrl else null,
-                trailingContent = if (settingsViewModel.iptvSourceUrl != Constants.IPTV_SOURCE_URL) "已启用" else "未启用",
+                trailingContent = if (settingsViewModel.iptvSourceUrl != Constants.IPTV_SOURCE_URL) "自定义" else "默认",
                 onSelected = { showDialog = true },
                 remoteConfig = true,
             )
