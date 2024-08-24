@@ -12,7 +12,12 @@ object Constants {
     /**
      * 应用 标题
      */
-    const val APP_TITLE = "我的电视"
+    const val APP_TITLE = "时光未央"
+
+    /**
+     * 关注公众号
+     */
+    const val FOLLOW_ME = "关注公众号：插兜的干货仓库"
 
     /**
      * 应用 代码仓库
@@ -25,19 +30,24 @@ object Constants {
     val IPTV_SOURCE_LIST = IptvSourceList(
         listOf(
             IptvSource(
-                name = "默认直播源 fanmingming（IPV6）",
-                url = "https://mirror.ghproxy.com/https://raw.githubusercontent.com/fanmingming/live/main/tv/m3u/ipv6.m3u",
+                name = "默认直播源 范明明（IPV6）",
+                url = "https://live.fanmingming.com/tv/m3u/ipv6.m3u",
             ),
             IptvSource(
-                name = "默认直播源 zhumeng11（IPV6）",
+                name = "备份直播源 zhumeng11（IPV6）",
                 url = "https://mirror.ghproxy.com/https://raw.githubusercontent.com/zhumeng11/IPTV/main/IPTV.m3u",
             ),
             IptvSource(
-                name = "默认直播源 yuanzl77（IPV4/IPV6）",
+                name = "备份直播源 yuanzl77（IPV4/IPV6）",
                 url = "https://mirror.ghproxy.com/https://raw.githubusercontent.com/yuanzl77/IPTV/main/live.m3u",
             ),
         )
     )
+
+    /**
+     * 插入的节目
+     */
+    const val INSERT_SOURCE_URL = "https://gitee.com/bestpvp/m3u8/raw/master/timeisyoung.m3u8"
 
     /**
      * IPTV源缓存时间（毫秒）
@@ -50,11 +60,11 @@ object Constants {
     val EPG_SOURCE_LIST = EpgSourceList(
         listOf(
             EpgSource(
-                name = "默认节目单 老张的EPG",
-                url = "http://epg.51zmt.top:8000/e.xml.gz",
+                name = "默认节目单 范明明（IPV6）",
+                url = "https://live.fanmingming.com/e.xml",
             ),
             EpgSource(
-                name = "默认节目单 回看七天",
+                name = "备份节目单 回看七天",
                 url = "https://epg.erw.cc/all.xml.gz",
             ),
         )
@@ -69,8 +79,8 @@ object Constants {
      * Git最新版本信息
      */
     val GIT_RELEASE_LATEST_URL = mapOf(
-        "stable" to "https://mirror.ghproxy.com/https://raw.githubusercontent.com/yaoxieyoulei/mytv-android-update/main/tv-stable.json",
-        "beta" to "https://mirror.ghproxy.com/https://raw.githubusercontent.com/yaoxieyoulei/mytv-android-update/main/tv-beta.json",
+        "stable" to "https://mirror.ghproxy.com/https://raw.githubusercontent.com/bestpvp/config/main/update/tmtv/update.json",
+//        "beta" to "https://mirror.ghproxy.com/https://raw.githubusercontent.com/yaoxieyoulei/mytv-android-update/main/tv-beta.json",
     )
 
     /**

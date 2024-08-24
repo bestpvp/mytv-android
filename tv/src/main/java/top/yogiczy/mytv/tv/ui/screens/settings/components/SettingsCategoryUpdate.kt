@@ -16,7 +16,7 @@ fun SettingsCategoryUpdate(
         item {
             val list = mapOf(
                 "stable" to "稳定版",
-                "beta" to "测试版",
+//                "beta" to "测试版",
             )
 
             SettingsListItem(

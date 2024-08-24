@@ -16,11 +16,11 @@ android {
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "top.yogiczy.mytv.tv"
+        applicationId = "com.bestpvp.tmtv.tv"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 2
-        versionName = "2.2.0"
+        versionCode = 240827
+        versionName = "240827"
         vectorDrawables {
             useSupportLibrary = true
         }

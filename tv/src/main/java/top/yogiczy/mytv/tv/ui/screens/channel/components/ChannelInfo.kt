@@ -20,6 +20,7 @@ import top.yogiczy.mytv.core.data.entities.channel.Channel
 import top.yogiczy.mytv.core.data.entities.epg.EpgProgramme
 import top.yogiczy.mytv.core.data.entities.epg.EpgProgrammeRecent
 import top.yogiczy.mytv.core.data.utils.ChannelUtil
+import top.yogiczy.mytv.core.data.utils.Constants
 import top.yogiczy.mytv.core.util.utils.isIPv6
 import top.yogiczy.mytv.tv.ui.material.Tag
 import top.yogiczy.mytv.tv.ui.material.TagDefaults
@@ -88,9 +89,11 @@ fun ChannelInfo(
             LocalContentColor provides LocalContentColor.current.copy(alpha = 0.8f),
         ) {
             if (currentPlaybackEpgProgramme == null) {
+                Text(Constants.FOLLOW_ME, maxLines = 1)
                 Text("正在播放：${recentEpgProgramme?.now?.title ?: "无节目"}", maxLines = 1)
                 Text("稍后播放：${recentEpgProgramme?.next?.title ?: "无节目"}", maxLines = 1)
             } else {
+                Text(Constants.FOLLOW_ME, maxLines = 1)
                 Text("正在回放：${currentPlaybackEpgProgramme.title}", maxLines = 1)
             }
         }

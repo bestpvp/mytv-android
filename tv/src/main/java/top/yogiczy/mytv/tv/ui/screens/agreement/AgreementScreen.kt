@@ -60,12 +60,14 @@ fun AgreementScreen(
                 verticalArrangement = Arrangement.spacedBy(4.dp),
             ) {
                 val messages = listOf(
-                    "欢迎使用${Constants.APP_TITLE}，请在使用前仔细阅读以下内容：",
+                    "欢迎使用 ${Constants.APP_TITLE} ，请在使用前仔细阅读以下内容：",
                     "1. 本软件为开源软件，仅供学习交流使用，禁止用于任何商业用途。",
                     "2. 本软件不提供任何直播内容，所有直播内容均来自网络。",
                     "3. 本软件完全基于您个人意愿使用，您应该对自己的使用行为和所有结果承担全部责任。",
                     "4. 如果本软件存在侵犯您的合法权益的情况，请及时与作者联系，作者将会及时删除有关内容。",
                     "如您继续使用本软件即代表您已完全理解并同意上述内容。",
+                    "",
+                    Constants.FOLLOW_ME,
                 )
 
                 items(messages) { Text(it) }

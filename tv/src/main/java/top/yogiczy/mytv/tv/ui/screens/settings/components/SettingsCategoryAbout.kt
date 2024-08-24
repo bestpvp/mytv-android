@@ -39,11 +39,43 @@ fun SettingsCategoryAbout(
     packageInfo: PackageInfo = rememberPackageInfo(),
 ) {
     SettingsContentList(modifier) {
+
+        item {
+            val popupManager = LocalPopupManager.current
+            val focusRequester = remember { FocusRequester() }
+            var visible by remember { mutableStateOf(false) }
+
+            SettingsListItem(
+                modifier = Modifier.focusRequester(focusRequester),
+                headlineContent = "扫码关注公众号",
+                trailingIcon = Icons.AutoMirrored.Filled.OpenInNew,
+                onSelected = {
+                    popupManager.push(focusRequester, true)
+                    visible = true
+                },
+            )
+
+            SimplePopup(
+                visibleProvider = { visible },
+                onDismissRequest = { visible = false },
+            ) {
+                val painter = painterResource(R.drawable.follow_me)
+
+                Image(
+                    painter,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .size(300.dp),
+                )
+            }
+        }
+
         item {
             SettingsListItem(
                 modifier = Modifier.focusRequester(it),
                 headlineContent = "应用名称",
-                trailingContent = Constants.APP_TITLE,
+                trailingContent = Constants.APP_TITLE+" - 致敬 yaoxieyoulei",
             )
         }
 
@@ -52,68 +84,6 @@ fun SettingsCategoryAbout(
                 headlineContent = "应用版本",
                 trailingContent = packageInfo.versionName,
             )
-        }
-
-        item {
-            val popupManager = LocalPopupManager.current
-            val focusRequester = remember { FocusRequester() }
-            var showDialog by remember { mutableStateOf(false) }
-
-            SettingsListItem(
-                modifier = Modifier.focusRequester(focusRequester),
-                headlineContent = "代码仓库",
-                trailingContent = Constants.APP_REPO,
-                trailingIcon = Icons.AutoMirrored.Default.OpenInNew,
-                onSelected = {
-                    popupManager.push(focusRequester, true)
-                    showDialog = true
-                },
-            )
-
-            SimplePopup(
-                visibleProvider = { showDialog },
-                onDismissRequest = { showDialog = false },
-            ) {
-                Box(modifier = modifier.fillMaxSize()) {
-                    Column(
-                        modifier = Modifier.align(Alignment.Center),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Qrcode(
-                            modifier = Modifier
-                                .padding(bottom = 10.dp)
-                                .width(200.dp)
-                                .height(200.dp),
-                            textProvider = { Constants.APP_REPO },
-                        )
-
-                        Text("扫码前往代码仓库")
-                    }
-                }
-            }
-        }
-
-        item {
-            val popupManager = LocalPopupManager.current
-            val focusRequester = remember { FocusRequester() }
-            var isGuideScreenVisible by remember { mutableStateOf(false) }
-
-            SettingsListItem(
-                modifier = Modifier.focusRequester(focusRequester),
-                headlineContent = "使用说明",
-                trailingIcon = Icons.AutoMirrored.Filled.OpenInNew,
-                onSelected = {
-                    popupManager.push(focusRequester, true)
-                    isGuideScreenVisible = true
-                },
-            )
-
-            SimplePopup(
-                visibleProvider = { isGuideScreenVisible },
-                onDismissRequest = { isGuideScreenVisible = false },
-            ) {
-                GuideScreen(onClose = { isGuideScreenVisible = false })
-            }
         }
 
         item {
@@ -144,6 +114,68 @@ fun SettingsCategoryAbout(
                         .align(Alignment.Center)
                         .size(300.dp),
                 )
+            }
+        }
+
+        item {
+            val popupManager = LocalPopupManager.current
+            val focusRequester = remember { FocusRequester() }
+            var isGuideScreenVisible by remember { mutableStateOf(false) }
+
+            SettingsListItem(
+                modifier = Modifier.focusRequester(focusRequester),
+                headlineContent = "使用说明",
+                trailingIcon = Icons.AutoMirrored.Filled.OpenInNew,
+                onSelected = {
+                    popupManager.push(focusRequester, true)
+                    isGuideScreenVisible = true
+                },
+            )
+
+            SimplePopup(
+                visibleProvider = { isGuideScreenVisible },
+                onDismissRequest = { isGuideScreenVisible = false },
+            ) {
+                GuideScreen(onClose = { isGuideScreenVisible = false })
+            }
+        }
+
+        item {
+            val popupManager = LocalPopupManager.current
+            val focusRequester = remember { FocusRequester() }
+            var showDialog by remember { mutableStateOf(false) }
+
+            SettingsListItem(
+                modifier = Modifier.focusRequester(focusRequester),
+                headlineContent = "致敬作者仓库",
+                trailingContent = Constants.APP_REPO,
+                trailingIcon = Icons.AutoMirrored.Default.OpenInNew,
+                onSelected = {
+                    popupManager.push(focusRequester, true)
+                    showDialog = true
+                },
+            )
+
+            SimplePopup(
+                visibleProvider = { showDialog },
+                onDismissRequest = { showDialog = false },
+            ) {
+                Box(modifier = modifier.fillMaxSize()) {
+                    Column(
+                        modifier = Modifier.align(Alignment.Center),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Qrcode(
+                            modifier = Modifier
+                                .padding(bottom = 10.dp)
+                                .width(200.dp)
+                                .height(200.dp),
+                            textProvider = { Constants.APP_REPO },
+                        )
+
+                        Text("扫码前往代码仓库")
+                    }
+                }
             }
         }
 
