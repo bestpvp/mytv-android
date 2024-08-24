@@ -5,7 +5,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.compose)
     alias(libs.plugins.kotlin.serialization)
-    alias(libs.plugins.sentry.android.gradle)
+//    alias(libs.plugins.sentry.android.gradle)
 }
 
 android {
@@ -16,7 +16,7 @@ android {
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "com.bestpvp.tmtv.tv"
+        applicationId = "com.bestpvp.tmtv"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 240827

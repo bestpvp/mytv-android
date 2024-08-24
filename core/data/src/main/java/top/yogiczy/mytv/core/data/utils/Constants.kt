@@ -34,12 +34,12 @@ object Constants {
                 url = "https://live.fanmingming.com/tv/m3u/ipv6.m3u",
             ),
             IptvSource(
-                name = "备份直播源 zhumeng11（IPV6）",
-                url = "https://mirror.ghproxy.com/https://raw.githubusercontent.com/zhumeng11/IPTV/main/IPTV.m3u",
+                name = "备份直播源 大葱（IPV4/IPV6）",
+                url = "https://tv.iill.top/m3u/Gather",
             ),
             IptvSource(
-                name = "备份直播源 yuanzl77（IPV4/IPV6）",
-                url = "https://mirror.ghproxy.com/https://raw.githubusercontent.com/yuanzl77/IPTV/main/live.m3u",
+                name = "备份直播源 圆l（IPV4/IPV6）",
+                url = "http://175.178.251.183:6689/live.m3u",
             ),
         )
     )

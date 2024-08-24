@@ -124,7 +124,7 @@
 
 ## 赞赏
 
-<img src="./screenshots/mm_reward_qrcode.png" width="48%"/>
+<img src="./screenshots/qrcode.png" width="48%"/>
 
 ## 致谢
 

@@ -25,7 +25,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.tv.material3.Text
-import io.sentry.Sentry
+//import io.sentry.Sentry
 import top.yogiczy.mytv.core.data.utils.Constants
 import top.yogiczy.mytv.tv.R
 import top.yogiczy.mytv.tv.ui.material.LocalPopupManager
@@ -59,7 +59,7 @@ fun SettingsCategoryAbout(
                 visibleProvider = { visible },
                 onDismissRequest = { visible = false },
             ) {
-                val painter = painterResource(R.drawable.follow_me)
+                val painter = painterResource(R.drawable.follow)
 
                 Image(
                     painter,
@@ -93,7 +93,7 @@ fun SettingsCategoryAbout(
 
             SettingsListItem(
                 modifier = Modifier.focusRequester(focusRequester),
-                headlineContent = "赞赏",
+                headlineContent = "请喝咖啡",
                 trailingIcon = Icons.AutoMirrored.Filled.OpenInNew,
                 onSelected = {
                     popupManager.push(focusRequester, true)
@@ -105,7 +105,7 @@ fun SettingsCategoryAbout(
                 visibleProvider = { visible },
                 onDismissRequest = { visible = false },
             ) {
-                val painter = painterResource(R.drawable.mm_reward_qrcode)
+                val painter = painterResource(R.drawable.qrcode)
 
                 Image(
                     painter,
@@ -179,15 +179,15 @@ fun SettingsCategoryAbout(
             }
         }
 
-        Sentry.withScope {
-            item {
-                @Suppress("UnstableApiUsage")
-                SettingsListItem(
-                    headlineContent = "设备ID",
-                    trailingContent = it.options.distinctId.toString(),
-                )
-            }
-        }
+//        Sentry.withScope {
+//            item {
+//                @Suppress("UnstableApiUsage")
+//                SettingsListItem(
+//                    headlineContent = "设备ID",
+//                    trailingContent = it.options.distinctId.toString(),
+//                )
+//            }
+//        }
     }
 }
 
