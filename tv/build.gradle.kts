@@ -19,8 +19,8 @@ android {
         applicationId = "com.bestpvp.tmtv"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 240827
-        versionName = "240827"
+        versionCode = 240905
+        versionName = "240905"
         vectorDrawables {
             useSupportLibrary = true
         }
