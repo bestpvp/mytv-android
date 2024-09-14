@@ -43,8 +43,10 @@ allprojects {
                 val minSdk =
                     project.extensions.getByType(BaseAppModuleExtension::class.java).defaultConfig.minSdk
                 val abi = filters.find { it.filterType == "ABI" }?.identifier ?: "all"
+//                (this as com.android.build.gradle.internal.api.BaseVariantOutputImpl).outputFileName =
+//                    "tmtv-android-${project.name}-$ver-${abi}-sdk$minSdk.apk"
                 (this as com.android.build.gradle.internal.api.BaseVariantOutputImpl).outputFileName =
-                    "tmtv-android-${project.name}-$ver-${abi}-sdk$minSdk.apk"
+                    "app-release.apk"
             }
         }
     }
