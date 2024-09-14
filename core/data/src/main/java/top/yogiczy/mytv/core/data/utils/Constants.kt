@@ -65,7 +65,7 @@ object Constants {
             ),
             EpgSource(
                 name = "备份节目单 回看七天",
-                url = "https://epg.erw.cc/all.xml.gz",
+                url = "https://e.erw.cc/all.xml.gz",
             ),
         )
     )

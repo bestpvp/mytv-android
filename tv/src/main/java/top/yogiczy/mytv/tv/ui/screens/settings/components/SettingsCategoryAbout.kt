@@ -25,7 +25,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.tv.material3.Text
-//import io.sentry.Sentry
 import top.yogiczy.mytv.core.data.utils.Constants
 import top.yogiczy.mytv.tv.R
 import top.yogiczy.mytv.tv.ui.material.LocalPopupManager
