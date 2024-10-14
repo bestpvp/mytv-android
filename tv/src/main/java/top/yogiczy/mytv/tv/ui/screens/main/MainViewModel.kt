@@ -32,7 +32,12 @@ class MainViewModel : ViewModel() {
     val uiState: StateFlow<MainUiState> = _uiState.asStateFlow()
 
     init {
+        init()
+    }
+
+    fun init() {
         viewModelScope.launch {
+            _uiState.value = MainUiState.Loading()
             refreshChannel()
             refreshEpg()
         }
@@ -98,6 +103,7 @@ class MainViewModel : ViewModel() {
         if (!Configs.epgEnable) return
 
         if (_uiState.value is MainUiState.Ready) {
+            EpgList.clearCache()
             val channelGroupList = (_uiState.value as MainUiState.Ready).channelGroupList
 
             flow {

@@ -34,12 +34,20 @@ object Constants {
                 url = "https://live.fanmingming.com/tv/m3u/ipv6.m3u",
             ),
             IptvSource(
+                name = "备份直播源 ZBDS（IPV4）",
+                url = "https://live.zbds.top/tv/iptv4.txt",
+            ),
+            IptvSource(
                 name = "备份直播源 大葱（IPV4/IPV6）",
                 url = "https://tv.iill.top/m3u/Gather",
             ),
             IptvSource(
                 name = "备份直播源 圆l（IPV4/IPV6）",
                 url = "http://175.178.251.183:6689/live.m3u",
+            ),
+            IptvSource(
+                name = "备份直播源 yuanzl77（IPV4/IPV6）",
+                url = "https://ghp.ci/https://raw.githubusercontent.com/yuanzl77/IPTV/main/live.m3u",
             ),
         )
     )
@@ -86,7 +94,7 @@ object Constants {
     /**
      * GitHub加速代理地址
      */
-    const val GITHUB_PROXY = "https://mirror.ghproxy.com/"
+    const val GITHUB_PROXY = "https://ghp.ci/"
 
     /**
      * HTTP请求重试次数

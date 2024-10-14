@@ -28,6 +28,7 @@ import top.yogiczy.mytv.tv.ui.material.Tag
 import top.yogiczy.mytv.tv.ui.screens.channelgroup.ChannelGroupManageScreen
 import top.yogiczy.mytv.tv.ui.screens.components.SelectDialog
 import top.yogiczy.mytv.tv.ui.screens.iptvsource.IptvSourceScreen
+import top.yogiczy.mytv.tv.ui.screens.main.MainViewModel
 import top.yogiczy.mytv.tv.ui.screens.settings.SettingsViewModel
 import top.yogiczy.mytv.tv.ui.utils.Configs
 
@@ -35,6 +36,7 @@ import top.yogiczy.mytv.tv.ui.utils.Configs
 fun SettingsCategoryIptv(
     modifier: Modifier = Modifier,
     settingsViewModel: SettingsViewModel = viewModel(),
+    mainViewModel: MainViewModel = viewModel(),
     channelGroupListProvider: () -> ChannelGroupList = { ChannelGroupList() },
 ) {
     val coroutineScope = rememberCoroutineScope()
@@ -163,6 +165,58 @@ fun SettingsCategoryIptv(
                     visible = false
                 },
             )
+        }
+
+        item {
+            val popupManager = LocalPopupManager.current
+            val focusRequester = remember { FocusRequester() }
+            val currentIptvSource = settingsViewModel.iptvSourceCurrent
+            var isIptvSourceScreenVisible by remember { mutableStateOf(false) }
+
+            SettingsListItem(
+                modifier = Modifier.focusRequester(focusRequester),
+                headlineContent = "自定义直播源",
+                trailingContent = {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    ) {
+                        Tag(if (currentIptvSource.isLocal) "本地" else "远程")
+                        Text(currentIptvSource.name)
+                    }
+                },
+                onSelected = {
+                    popupManager.push(focusRequester, true)
+                    isIptvSourceScreenVisible = true
+                },
+                remoteConfig = true,
+            )
+
+            SimplePopup(
+                visibleProvider = { isIptvSourceScreenVisible },
+                onDismissRequest = { isIptvSourceScreenVisible = false },
+            ) {
+                IptvSourceScreen(
+                    iptvSourceListProvider = { settingsViewModel.iptvSourceList },
+                    currentIptvSourceProvider = { settingsViewModel.iptvSourceCurrent },
+                    onIptvSourceSelected = {
+                        isIptvSourceScreenVisible = false
+                        if (settingsViewModel.iptvSourceCurrent != it) {
+                            settingsViewModel.iptvSourceCurrent = it
+                            settingsViewModel.iptvLastChannelIdx = 0
+                            settingsViewModel.iptvChannelGroupHiddenList = emptySet()
+                            coroutineScope.launch {
+                                IptvRepository(settingsViewModel.iptvSourceCurrent).clearCache()
+                            }
+                            mainViewModel.init()
+                        }
+                    },
+                    onIptvSourceDeleted = {
+                        settingsViewModel.iptvSourceList =
+                            IptvSourceList(settingsViewModel.iptvSourceList - it)
+                    },
+                )
+            }
         }
 
         item {

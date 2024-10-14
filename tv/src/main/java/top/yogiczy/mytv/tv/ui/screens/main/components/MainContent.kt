@@ -10,6 +10,7 @@ import kotlinx.coroutines.launch
 import top.yogiczy.mytv.core.data.entities.channel.ChannelGroupList
 import top.yogiczy.mytv.core.data.entities.channel.ChannelGroupList.Companion.channelIdx
 import top.yogiczy.mytv.core.data.entities.channel.ChannelGroupList.Companion.channelList
+import top.yogiczy.mytv.core.data.entities.channel.ChannelList
 import top.yogiczy.mytv.core.data.entities.epg.Epg
 import top.yogiczy.mytv.core.data.entities.epg.EpgList
 import top.yogiczy.mytv.core.data.entities.epg.EpgList.Companion.match
@@ -190,11 +191,12 @@ fun MainContent(
             channelProvider = { mainContentState.currentChannel },
             channelUrlIdxProvider = { mainContentState.currentChannelUrlIdx },
             channelNumberProvider = { filteredChannelGroupListProvider().channelIdx(mainContentState.currentChannel) + 1 },
+            showChannelLogoProvider = { settingsViewModel.uiShowChannelLogo },
             recentEpgProgrammeProvider = {
                 epgListProvider().recentProgramme(mainContentState.currentChannel)
             },
-            showEpgProgrammeProgressProvider = { settingsViewModel.uiShowEpgProgrammeProgress },
             currentPlaybackEpgProgrammeProvider = { mainContentState.currentPlaybackEpgProgramme },
+            videoPlayerMetadataProvider = { videoPlayerState.metadata },
         )
     }
 
@@ -312,6 +314,7 @@ fun MainContent(
             currentChannelNumberProvider = {
                 (filteredChannelGroupListProvider().channelList.indexOf(mainContentState.currentChannel) + 1).toString()
             },
+            showChannelLogoProvider = { settingsViewModel.uiShowChannelLogo },
             epgListProvider = epgListProvider,
             currentPlaybackEpgProgrammeProvider = { mainContentState.currentPlaybackEpgProgramme },
             videoPlayerMetadataProvider = { videoPlayerState.metadata },
@@ -383,6 +386,11 @@ fun MainContent(
             channelGroupListProvider = filteredChannelGroupListProvider,
             currentChannelProvider = { mainContentState.currentChannel },
             currentChannelUrlIdxProvider = { mainContentState.currentChannelUrlIdx },
+            favoriteChannelListProvider = {
+                val favoriteChannelNameList = settingsViewModel.iptvChannelFavoriteList
+                ChannelList(filteredChannelGroupListProvider().channelList
+                    .filter { favoriteChannelNameList.contains(it.name) })
+            },
             showChannelLogoProvider = { settingsViewModel.uiShowChannelLogo },
             onChannelSelected = {
                 mainContentState.isChannelScreenVisible = false
@@ -405,7 +413,6 @@ fun MainContent(
             },
             videoPlayerMetadataProvider = { videoPlayerState.metadata },
             channelFavoriteEnabledProvider = { settingsViewModel.iptvChannelFavoriteEnable },
-            channelFavoriteListProvider = { settingsViewModel.iptvChannelFavoriteList.toImmutableList() },
             channelFavoriteListVisibleProvider = { settingsViewModel.iptvChannelFavoriteListVisible },
             onChannelFavoriteListVisibleChange = {
                 settingsViewModel.iptvChannelFavoriteListVisible = it
