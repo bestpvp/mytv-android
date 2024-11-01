@@ -53,7 +53,7 @@ fun EpgProgrammeItemList(
         // },
         state = listState,
         contentPadding = PaddingValues(vertical = 8.dp),
-        verticalArrangement = Arrangement.spacedBy(10.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         itemsIndexed(
             epgProgrammeList,

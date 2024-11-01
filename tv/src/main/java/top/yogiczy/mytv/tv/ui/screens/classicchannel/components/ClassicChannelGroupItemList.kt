@@ -27,7 +27,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.tv.material3.ListItem
+import androidx.tv.material3.DenseListItem
 import androidx.tv.material3.ListItemDefaults
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
@@ -81,7 +81,7 @@ fun ClassicChannelGroupItemList(
             ),
         state = listState,
         contentPadding = PaddingValues(8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         itemsIndexed(channelGroupList) { index, channelGroup ->
             val isSelected by remember { derivedStateOf { channelGroup == focusedChannelGroup } }
@@ -113,7 +113,7 @@ private fun ClassicChannelGroupItem(
     val focusRequester = remember { FocusRequester() }
     var isFocused by remember { mutableStateOf(false) }
 
-    ListItem(
+    DenseListItem(
         modifier = modifier
             .focusRequester(focusRequester)
             .onFocusChanged {

@@ -14,8 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.tv.material3.DenseListItem
 import androidx.tv.material3.Icon
-import androidx.tv.material3.ListItem
 import androidx.tv.material3.ListItemDefaults
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
@@ -44,7 +44,7 @@ fun EpgProgrammeItem(
 
     var isFocused by remember { mutableStateOf(false) }
 
-    ListItem(
+    DenseListItem(
         modifier = modifier
             .ifElse(programme.isLive() && focusOnLive, Modifier.focusOnLaunchedSaveable())
             .onFocusChanged { isFocused = it.isFocused || it.hasFocus }
@@ -60,13 +60,11 @@ fun EpgProgrammeItem(
         ),
         selected = programme.isLive(),
         onClick = {},
-        overlineContent = {
-            val start = timeFormat.format(programme.startAt)
-            val end = timeFormat.format(programme.endAt)
-            Text("$start  ~ $end")
-        },
         headlineContent = {
-            Text(programme.title, maxLines = if (isFocused) Int.MAX_VALUE else 1)
+            Text(
+                "${timeFormat.format(programme.startAt)}    ${programme.title}",
+                maxLines = if (isFocused) Int.MAX_VALUE else 1
+            )
         },
         trailingContent = {
             if (programme.isLive()) {

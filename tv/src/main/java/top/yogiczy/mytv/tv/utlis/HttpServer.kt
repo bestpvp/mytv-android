@@ -159,6 +159,7 @@ object HttpServer : Loggable() {
 
         newIptvSource?.let {
             Configs.iptvSourceList = IptvSourceList(Configs.iptvSourceList + it)
+            Configs.iptvSourceCurrent = it
         }
 
         wrapResponse(response).send("success")
@@ -172,9 +173,10 @@ object HttpServer : Loggable() {
         val name = body.get("name").toString()
         val url = body.get("url").toString()
 
-        Configs.epgSourceList = EpgSourceList(Configs.epgSourceList.toMutableList().apply {
-            add(EpgSource(name, url))
-        })
+        EpgSource(name, url).let {
+            Configs.epgSourceList = EpgSourceList(Configs.epgSourceList + it)
+            Configs.epgSourceCurrent = it
+        }
 
         wrapResponse(response).send("success")
     }

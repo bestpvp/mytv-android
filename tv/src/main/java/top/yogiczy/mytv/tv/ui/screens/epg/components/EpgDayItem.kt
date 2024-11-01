@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.tv.material3.ListItem
+import androidx.tv.material3.DenseListItem
 import androidx.tv.material3.ListItemDefaults
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
@@ -34,7 +34,7 @@ fun EpgDayItem(
     val dayAfterTomorrow =
         dateFormat.format(System.currentTimeMillis() + 48 * 3600 * 1000)
 
-    ListItem(
+    DenseListItem(
         modifier = modifier
             .handleKeyEvents(onSelect = onDaySelected),
         colors = ListItemDefaults.colors(

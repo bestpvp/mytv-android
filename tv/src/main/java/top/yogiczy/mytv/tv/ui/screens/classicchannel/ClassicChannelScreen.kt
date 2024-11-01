@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -27,6 +28,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusProperties
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.tooling.preview.Preview
@@ -99,8 +101,10 @@ fun ClassicChannelScreen(
     var epgListVisible by remember { mutableStateOf(false) }
 
     var groupWidth by remember { mutableIntStateOf(0) }
+    var channelListWidth by remember { mutableIntStateOf(0) }
+    var epgListIsFocused by remember { mutableStateOf(false) }
     val offsetXPx by animateIntAsState(
-        targetValue = if (epgListVisible) -groupWidth else 0,
+        targetValue = if (epgListVisible) if (epgListIsFocused) -groupWidth - channelListWidth else -groupWidth else 0,
         animationSpec = tween(),
         label = "",
     )
@@ -134,6 +138,7 @@ fun ClassicChannelScreen(
 
             ClassicChannelItemList(
                 modifier = Modifier
+                    .onSizeChanged { channelListWidth = it.width }
                     .focusProperties {
                         exit = {
                             if (epgListVisible && it == FocusDirection.Left) {
@@ -167,6 +172,10 @@ fun ClassicChannelScreen(
 
             Visible({ epgListVisible }) {
                 ClassicEpgItemList(
+                    modifier = Modifier
+                        .onFocusChanged { epgListIsFocused = it.hasFocus || it.hasFocus },
+                    programmeListModifier = Modifier
+                        .width(if (epgListIsFocused) 340.dp else 268.dp),
                     epgProvider = { epgListProvider().match(focusedChannel) },
                     epgProgrammeReserveListProvider = {
                         EpgProgrammeReserveList(

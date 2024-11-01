@@ -11,6 +11,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.unit.dp
 import androidx.tv.material3.MaterialTheme
 import kotlinx.collections.immutable.toPersistentList
@@ -26,6 +27,7 @@ import java.util.Locale
 @Composable
 fun ClassicEpgItemList(
     modifier: Modifier = Modifier,
+    programmeListModifier: Modifier = Modifier,
     epgProvider: () -> Epg? = { null },
     epgProgrammeReserveListProvider: () -> EpgProgrammeReserveList = { EpgProgrammeReserveList() },
     supportPlaybackProvider: () -> Boolean = { false },
@@ -39,14 +41,19 @@ fun ClassicEpgItemList(
     val programDayGroup = epg.programmeList.groupBy { dateFormat.format(it.startAt) }
     var currentDay by remember { mutableStateOf(dateFormat.format(System.currentTimeMillis())) }
 
+    var isFocused by remember { mutableStateOf(false) }
+
     Row(
         modifier = modifier
             .background(MaterialTheme.colorScheme.surface.copy(0.7f))
-            .padding(start = 12.dp, end = 12.dp),
+            .padding(start = 12.dp, end = 12.dp)
+            .onFocusChanged {
+                isFocused = it.isFocused || it.hasFocus
+            },
         horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         EpgProgrammeItemList(
-            modifier = Modifier.width(268.dp),
+            modifier = programmeListModifier,
             epgProgrammeListProvider = {
                 EpgProgrammeList(programDayGroup.getOrElse(currentDay) { emptyList() })
             },
@@ -59,7 +66,7 @@ fun ClassicEpgItemList(
             onUserAction = onUserAction,
         )
 
-        if (programDayGroup.size > 1) {
+        if (programDayGroup.size > 1 && isFocused) {
             EpgDayItemList(
                 modifier = Modifier.width(80.dp),
                 dayListProvider = { programDayGroup.keys.toPersistentList() },

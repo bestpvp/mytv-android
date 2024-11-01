@@ -55,7 +55,7 @@ fun EpgScreen(
     ) {
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             EpgProgrammeItemList(
-                modifier = Modifier.width(268.dp),
+                modifier = Modifier.width(340.dp),
                 epgProgrammeListProvider = {
                     EpgProgrammeList(programDayGroup.getOrElse(currentDay) { emptyList() })
                 },

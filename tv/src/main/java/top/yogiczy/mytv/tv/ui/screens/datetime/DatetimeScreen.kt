@@ -1,6 +1,5 @@
 package top.yogiczy.mytv.tv.ui.screens.datetime
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -12,7 +11,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import kotlinx.coroutines.delay
@@ -67,12 +65,7 @@ fun DatetimeScreen(
                 style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier
                     .align(Alignment.TopEnd)
-                    .padding(top = childPadding.top, end = childPadding.end)
-                    .background(
-                        color = MaterialTheme.colorScheme.surface.copy(0.8f),
-                        shape = MaterialTheme.shapes.medium,
-                    )
-                    .padding(horizontal = 8.dp, vertical = 4.dp),
+                    .padding(top = childPadding.top, end = childPadding.end),
             )
         }
     }
