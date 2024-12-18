@@ -3,6 +3,7 @@ package top.yogiczy.mytv.tv.ui.screens.videoplayer.player
 import android.content.Context
 import android.net.Uri
 import android.view.SurfaceView
+import android.view.TextureView
 import androidx.annotation.OptIn
 import androidx.media3.common.C
 import androidx.media3.common.Format
@@ -15,7 +16,6 @@ import androidx.media3.datasource.DefaultDataSource
 import androidx.media3.datasource.DefaultHttpDataSource
 import androidx.media3.exoplayer.DecoderReuseEvaluation
 import androidx.media3.exoplayer.DefaultRenderersFactory
-import androidx.media3.exoplayer.DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.analytics.AnalyticsListener
 import androidx.media3.exoplayer.hls.HlsMediaSource
@@ -23,6 +23,7 @@ import androidx.media3.exoplayer.rtsp.RtspMediaSource
 import androidx.media3.exoplayer.source.MediaSource
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import androidx.media3.exoplayer.util.EventLogger
+import androidx.media3.exoplayer.video.MediaCodecVideoRenderer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -34,16 +35,13 @@ class Media3VideoPlayer(
     private val context: Context,
     private val coroutineScope: CoroutineScope,
 ) : VideoPlayer(coroutineScope) {
-    private val videoPlayer by lazy {
-        val renderersFactory = DefaultRenderersFactory(context)
-            .setExtensionRendererMode(EXTENSION_RENDERER_MODE_ON)
 
-        ExoPlayer
-            .Builder(context)
-            .setRenderersFactory(renderersFactory)
-            .build()
-            .apply { playWhenReady = true }
-    }
+    private var videoPlayer = getPlayer()
+
+    private var softDecode: Boolean? = null
+    private var surfaceView: SurfaceView? = null
+    private var textureView: TextureView? = null
+
     private val dataSourceFactory by lazy {
         DefaultDataSource.Factory(
             context,
@@ -59,6 +57,43 @@ class Media3VideoPlayer(
 
     private val contentTypeAttempts = mutableMapOf<Int, Boolean>()
     private var updatePositionJob: Job? = null
+
+    private fun getPlayer(): ExoPlayer {
+        val renderersFactory = DefaultRenderersFactory(context)
+            .setExtensionRendererMode(
+                if (softDecode ?: Configs.videoPlayerForceAudioSoftDecode)
+                    DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER
+                else DefaultRenderersFactory.EXTENSION_RENDERER_MODE_ON
+            )
+
+
+        MediaCodecVideoRenderer.skipMultipleFramesOnSameVsync =
+            Configs.videoPlayerSkipMultipleFramesOnSameVSync
+        return ExoPlayer
+            .Builder(context)
+            .setRenderersFactory(renderersFactory)
+            .build()
+            .apply { playWhenReady = true }
+    }
+
+    private fun reInitPlayer() {
+        val uri = videoPlayer.currentMediaItem?.localConfiguration?.uri
+
+        videoPlayer.removeListener(playerListener)
+        videoPlayer.removeAnalyticsListener(metadataListener)
+        videoPlayer.removeAnalyticsListener(eventLogger)
+        videoPlayer.release()
+
+        videoPlayer = getPlayer()
+
+        videoPlayer.addListener(playerListener)
+        videoPlayer.addAnalyticsListener(metadataListener)
+        videoPlayer.addAnalyticsListener(eventLogger)
+
+        surfaceView?.let { setVideoSurfaceView(it) }
+        textureView?.let { setVideoTextureView(it) }
+        uri?.let { prepare(uri) }
+    }
 
     private fun getMediaSource(uri: Uri, contentType: Int? = null): MediaSource? {
         val mediaItem = MediaItem.fromUri(uri)
@@ -136,6 +171,20 @@ class Media3VideoPlayer(
                                 )
                             )
                         }
+                    }
+                }
+
+                androidx.media3.common.PlaybackException.ERROR_CODE_DECODER_INIT_FAILED -> {
+                    if (softDecode == true) {
+                        triggerError(
+                            PlaybackException(
+                                ex.errorCodeName.replace("ERROR_CODE", "MEDIA3_ERROR"),
+                                ex.errorCode
+                            )
+                        )
+                    } else {
+                        softDecode = true
+                        reInitPlayer()
                     }
                 }
 
@@ -246,6 +295,9 @@ class Media3VideoPlayer(
     }
 
     override fun prepare(url: String) {
+        if (Configs.videoPlayerStopPreviousMediaItem)
+            videoPlayer.stop()
+
         contentTypeAttempts.clear()
         prepare(Uri.parse(url.let {
             if (url.endsWith("?")) "${it}t" else it
@@ -271,6 +323,12 @@ class Media3VideoPlayer(
     }
 
     override fun setVideoSurfaceView(surfaceView: SurfaceView) {
+        this.surfaceView = surfaceView
         videoPlayer.setVideoSurfaceView(surfaceView)
+    }
+
+    override fun setVideoTextureView(textureView: TextureView) {
+        this.textureView = textureView
+        videoPlayer.setVideoTextureView(textureView)
     }
 }

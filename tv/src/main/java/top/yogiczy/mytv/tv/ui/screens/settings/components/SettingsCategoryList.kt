@@ -16,7 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.focus.focusRestorer
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalFocusManager
@@ -34,6 +33,7 @@ import top.yogiczy.mytv.tv.ui.theme.MyTVTheme
 import top.yogiczy.mytv.tv.ui.utils.focusOnLaunchedSaveable
 import top.yogiczy.mytv.tv.ui.utils.handleKeyEvents
 import top.yogiczy.mytv.tv.ui.utils.ifElse
+import top.yogiczy.mytv.tv.ui.utils.saveFocusRestorer
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -49,7 +49,7 @@ fun SettingsCategoryList(
         verticalArrangement = Arrangement.spacedBy(10.dp),
         modifier = modifier.ifElse(
             LocalSettings.current.uiFocusOptimize,
-            Modifier.focusRestorer(),
+            Modifier.saveFocusRestorer(),
         ),
     ) {
         itemsIndexed(SettingsCategories.entries) { index, category ->

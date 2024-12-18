@@ -26,3 +26,9 @@ include(":core:util")
 include(":core:designsystem")
 include(":tv")
 include(":mobile")
+
+val mediaSettingsFile = file("../media/core_settings.gradle")
+if (mediaSettingsFile.exists()) {
+    (gradle as ExtensionAware).extra["androidxMediaModulePrefix"] = "media3:"
+    apply(from = mediaSettingsFile)
+}

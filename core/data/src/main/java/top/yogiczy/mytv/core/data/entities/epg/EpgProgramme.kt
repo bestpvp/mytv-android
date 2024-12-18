@@ -1,6 +1,7 @@
 package top.yogiczy.mytv.core.data.entities.epg
 
 import kotlinx.serialization.Serializable
+import java.util.Calendar
 import kotlin.math.ceil
 import kotlin.math.roundToInt
 
@@ -44,5 +45,19 @@ data class EpgProgramme(
             endAt = System.currentTimeMillis() + 3600 * 1000,
             title = "节目标题",
         )
+
+        val EMPTY by lazy {
+            val calendar = Calendar.getInstance()
+            calendar.set(Calendar.HOUR_OF_DAY, 0)
+            calendar.set(Calendar.MINUTE, 0)
+            calendar.set(Calendar.SECOND, 0)
+            calendar.set(Calendar.MILLISECOND, 0)
+
+            EpgProgramme(
+                startAt = calendar.timeInMillis,
+                endAt = calendar.timeInMillis + (24 * 3600 - 1) * 1000,
+                title = "精彩节目",
+            )
+        }
     }
 }

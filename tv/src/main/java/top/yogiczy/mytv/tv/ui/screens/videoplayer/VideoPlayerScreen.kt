@@ -1,6 +1,7 @@
 package top.yogiczy.mytv.tv.ui.screens.videoplayer
 
 import android.view.SurfaceView
+import android.view.TextureView
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
@@ -14,18 +15,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.viewmodel.compose.viewModel
 import top.yogiczy.mytv.tv.ui.material.Visible
 import top.yogiczy.mytv.tv.ui.rememberChildPadding
+import top.yogiczy.mytv.tv.ui.screens.settings.SettingsViewModel
 import top.yogiczy.mytv.tv.ui.screens.videoplayer.components.VideoPlayerError
 import top.yogiczy.mytv.tv.ui.screens.videoplayer.components.VideoPlayerMetadata
 import top.yogiczy.mytv.tv.ui.screens.videoplayer.player.VideoPlayer
 import top.yogiczy.mytv.tv.ui.theme.MyTVTheme
 import top.yogiczy.mytv.tv.ui.tooling.PreviewWithLayoutGrids
+import top.yogiczy.mytv.tv.ui.utils.Configs
 
 @Composable
 fun VideoPlayerScreen(
     modifier: Modifier = Modifier,
     state: VideoPlayerState = rememberVideoPlayerState(),
+    settingsViewModel: SettingsViewModel = viewModel(),
     showMetadataProvider: () -> Boolean = { false },
 ) {
     val context = LocalContext.current
@@ -46,13 +51,27 @@ fun VideoPlayerScreen(
             VideoPlayerDisplayMode.WIDE -> Modifier.aspectRatio(2.35f / 1)
         }
 
-        AndroidView(
-            modifier = Modifier
-                .align(Alignment.Center)
-                .then(displayModeModifier),
-            factory = { SurfaceView(context) },
-            update = { state.setVideoSurfaceView(it) },
-        )
+        when (settingsViewModel.videoPlayerRenderMode) {
+            Configs.VideoPlayerRenderMode.SURFACE_VIEW -> {
+                AndroidView(
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .then(displayModeModifier),
+                    factory = { SurfaceView(context) },
+                    update = { state.setVideoSurfaceView(it) },
+                )
+            }
+
+            Configs.VideoPlayerRenderMode.TEXTURE_VIEW -> {
+                AndroidView(
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .then(displayModeModifier),
+                    factory = { TextureView(context) },
+                    update = { state.setVideoTextureView(it) },
+                )
+            }
+        }
     }
 
     VideoPlayerScreenCover(

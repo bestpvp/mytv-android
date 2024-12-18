@@ -36,6 +36,7 @@ import top.yogiczy.mytv.core.data.entities.epg.EpgProgrammeRecent
 import top.yogiczy.mytv.tv.ui.theme.MyTVTheme
 import top.yogiczy.mytv.tv.ui.utils.handleKeyEvents
 import top.yogiczy.mytv.tv.ui.utils.ifElse
+import top.yogiczy.mytv.tv.ui.utils.saveRequestFocus
 
 @Composable
 fun ChannelItem(
@@ -57,7 +58,7 @@ fun ChannelItem(
     LaunchedEffect(Unit) {
         if (initialFocused) {
             onInitialFocused()
-            focusRequester.requestFocus()
+            focusRequester.saveRequestFocus()
         }
     }
 

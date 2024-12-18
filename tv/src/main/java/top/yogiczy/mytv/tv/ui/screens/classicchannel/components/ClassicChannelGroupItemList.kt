@@ -16,13 +16,13 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.focus.focusRestorer
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -32,6 +32,7 @@ import androidx.tv.material3.ListItemDefaults
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.launch
 import top.yogiczy.mytv.core.data.entities.channel.ChannelGroup
 import top.yogiczy.mytv.core.data.entities.channel.ChannelGroupList
 import top.yogiczy.mytv.tv.ui.material.rememberDebounceState
@@ -40,6 +41,8 @@ import top.yogiczy.mytv.tv.ui.theme.MyTVTheme
 import top.yogiczy.mytv.tv.ui.utils.focusOnLaunchedSaveable
 import top.yogiczy.mytv.tv.ui.utils.handleKeyEvents
 import top.yogiczy.mytv.tv.ui.utils.ifElse
+import top.yogiczy.mytv.tv.ui.utils.saveFocusRestorer
+import top.yogiczy.mytv.tv.ui.utils.saveRequestFocus
 import kotlin.math.max
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -68,6 +71,23 @@ fun ClassicChannelGroupItemList(
         onChannelGroupFocused(focusedChannelGroup)
     }
 
+    val coroutineScope = rememberCoroutineScope()
+    val firstFocusRequester = remember { FocusRequester() }
+    val lastFocusRequester = remember { FocusRequester() }
+    fun scrollToFirst() {
+        coroutineScope.launch {
+            listState.scrollToItem(0)
+            firstFocusRequester.saveRequestFocus()
+        }
+    }
+
+    fun scrollToLast() {
+        coroutineScope.launch {
+            listState.scrollToItem(channelGroupList.lastIndex)
+            lastFocusRequester.saveRequestFocus()
+        }
+    }
+
     LazyColumn(
         modifier = modifier
             .width(140.dp)
@@ -75,7 +95,7 @@ fun ClassicChannelGroupItemList(
             .background(MaterialTheme.colorScheme.surface.copy(0.9f))
             .ifElse(
                 LocalSettings.current.uiFocusOptimize,
-                Modifier.focusRestorer {
+                Modifier.saveFocusRestorer {
                     itemFocusRequesterList[channelGroupList.indexOf(focusedChannelGroup)]
                 },
             ),
@@ -89,7 +109,19 @@ fun ClassicChannelGroupItemList(
             ClassicChannelGroupItem(
                 modifier = Modifier
                     .ifElse(channelGroup == initialChannelGroup, Modifier.focusOnLaunchedSaveable())
-                    .focusRequester(itemFocusRequesterList[index]),
+                    .focusRequester(itemFocusRequesterList[index])
+                    .ifElse(
+                        index == 0,
+                        Modifier
+                            .focusRequester(firstFocusRequester)
+                            .handleKeyEvents(onUp = { scrollToLast() })
+                    )
+                    .ifElse(
+                        index == channelGroupList.lastIndex,
+                        Modifier
+                            .focusRequester(lastFocusRequester)
+                            .handleKeyEvents(onDown = { scrollToFirst() })
+                    ),
                 channelGroupProvider = { channelGroup },
                 isSelectedProvider = { isSelected },
                 onFocused = {
@@ -123,6 +155,7 @@ private fun ClassicChannelGroupItem(
             .handleKeyEvents(
                 isFocused = { isFocused },
                 focusRequester = focusRequester,
+                onSelect = {},
             ),
         colors = ListItemDefaults.colors(
             focusedContainerColor = MaterialTheme.colorScheme.onSurface,

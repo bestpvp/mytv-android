@@ -81,7 +81,7 @@ fun SettingsCategoryAbout(
         item {
             SettingsListItem(
                 headlineContent = "应用版本",
-                trailingContent = packageInfo.versionName,
+                trailingContent = packageInfo.versionName ?: "",
             )
         }
 

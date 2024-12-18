@@ -136,6 +136,18 @@ object Configs {
 
         /** 播放器 显示模式 */
         VIDEO_PLAYER_DISPLAY_MODE,
+
+        /** 播放器 强制音频软解 */
+        VIDEO_PLAYER_FORCE_AUDIO_SOFT_DECODE,
+
+        /** 播放器 渲染方式 */
+        VIDEO_PLAYER_RENDER_MODE,
+
+        /** 播放器 停止上一媒体项 */
+        VIDEO_PLAYER_STOP_PREVIOUS_MEDIA_ITEM,
+
+        /** 播放器 跳过同一VSync渲染多帧 */
+        VIDEO_PLAYER_SKIP_MULTIPLE_FRAMES_ON_SAME_VSYNC,
     }
 
     /** ==================== 应用 ==================== */
@@ -354,6 +366,28 @@ object Configs {
         )
         set(value) = SP.putInt(KEY.VIDEO_PLAYER_DISPLAY_MODE.name, value.value)
 
+    /** 播放器 强制音频软解 */
+    var videoPlayerForceAudioSoftDecode: Boolean
+        get() = SP.getBoolean(KEY.VIDEO_PLAYER_FORCE_AUDIO_SOFT_DECODE.name, false)
+        set(value) = SP.putBoolean(KEY.VIDEO_PLAYER_FORCE_AUDIO_SOFT_DECODE.name, value)
+
+    /** 播放器 渲染方式 */
+    var videoPlayerRenderMode: VideoPlayerRenderMode
+        get() = VideoPlayerRenderMode.fromValue(
+            SP.getInt(KEY.VIDEO_PLAYER_RENDER_MODE.name, VideoPlayerRenderMode.SURFACE_VIEW.value)
+        )
+        set(value) = SP.putInt(KEY.VIDEO_PLAYER_RENDER_MODE.name, value.value)
+
+    /** 播放器 停止上一媒体项 */
+    var videoPlayerStopPreviousMediaItem: Boolean
+        get() = SP.getBoolean(KEY.VIDEO_PLAYER_STOP_PREVIOUS_MEDIA_ITEM.name, true)
+        set(value) = SP.putBoolean(KEY.VIDEO_PLAYER_STOP_PREVIOUS_MEDIA_ITEM.name, value)
+
+    /** 播放器 跳过同一VSync渲染多帧 */
+    var videoPlayerSkipMultipleFramesOnSameVSync: Boolean
+        get() = SP.getBoolean(KEY.VIDEO_PLAYER_SKIP_MULTIPLE_FRAMES_ON_SAME_VSYNC.name, false)
+        set(value) = SP.putBoolean(KEY.VIDEO_PLAYER_SKIP_MULTIPLE_FRAMES_ON_SAME_VSYNC.name, value)
+
     enum class UiTimeShowMode(val value: Int) {
         /** 隐藏 */
         HIDDEN(0),
@@ -387,6 +421,20 @@ object Configs {
         companion object {
             fun fromValue(value: Int): IptvHybridMode {
                 return entries.firstOrNull { it.value == value } ?: DISABLE
+            }
+        }
+    }
+
+    enum class VideoPlayerRenderMode(val value: Int, val label: String) {
+        /** SurfaceView */
+        SURFACE_VIEW(0, "SurfaceView"),
+
+        /** TextureView */
+        TEXTURE_VIEW(1, "TextureView");
+
+        companion object {
+            fun fromValue(value: Int): VideoPlayerRenderMode {
+                return entries.firstOrNull { it.value == value } ?: SURFACE_VIEW
             }
         }
     }

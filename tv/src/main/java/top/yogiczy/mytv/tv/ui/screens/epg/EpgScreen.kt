@@ -26,6 +26,7 @@ import top.yogiczy.mytv.tv.ui.screens.epg.components.EpgProgrammeItemList
 import top.yogiczy.mytv.tv.ui.theme.MyTVTheme
 import top.yogiczy.mytv.tv.ui.tooling.PreviewWithLayoutGrids
 import top.yogiczy.mytv.tv.ui.utils.captureBackKey
+import top.yogiczy.mytv.tv.ui.utils.focusOnLaunched
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -48,7 +49,9 @@ fun EpgScreen(
     var currentDay by remember { mutableStateOf(dateFormat.format(System.currentTimeMillis())) }
 
     Drawer(
-        modifier = modifier.captureBackKey { onClose() },
+        modifier = modifier
+            .captureBackKey { onClose() }
+            .focusOnLaunched(),
         onDismissRequest = onClose,
         position = DrawerPosition.Start,
         header = { Text("节目单") },
@@ -57,7 +60,7 @@ fun EpgScreen(
             EpgProgrammeItemList(
                 modifier = Modifier.width(340.dp),
                 epgProgrammeListProvider = {
-                    EpgProgrammeList(programDayGroup.getOrElse(currentDay) { emptyList() })
+                    EpgProgrammeList(programDayGroup.getOrElse(currentDay) { listOf(EpgProgramme.EMPTY) })
                 },
                 epgProgrammeReserveListProvider = epgProgrammeReserveListProvider,
                 supportPlaybackProvider = supportPlaybackProvider,

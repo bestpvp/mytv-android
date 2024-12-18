@@ -320,6 +320,38 @@ class SettingsViewModel : ViewModel() {
             Configs.videoPlayerDisplayMode = value
         }
 
+    private var _videoPlayerForceAudioSoftDecode by mutableStateOf(false)
+    var videoPlayerForceAudioSoftDecode: Boolean
+        get() = _videoPlayerForceAudioSoftDecode
+        set(value) {
+            _videoPlayerForceAudioSoftDecode = value
+            Configs.videoPlayerForceAudioSoftDecode = value
+        }
+
+    private var _videoPlayerRenderMode by mutableStateOf(Configs.VideoPlayerRenderMode.SURFACE_VIEW)
+    var videoPlayerRenderMode: Configs.VideoPlayerRenderMode
+        get() = _videoPlayerRenderMode
+        set(value) {
+            _videoPlayerRenderMode = value
+            Configs.videoPlayerRenderMode = value
+        }
+
+    private var _videoPlayerStopPreviousMediaItem by mutableStateOf(false)
+    var videoPlayerStopPreviousMediaItem: Boolean
+        get() = _videoPlayerStopPreviousMediaItem
+        set(value) {
+            _videoPlayerStopPreviousMediaItem = value
+            Configs.videoPlayerStopPreviousMediaItem = value
+        }
+
+    private var _videoPlayerSkipMultipleFramesOnSameVSync by mutableStateOf(false)
+    var videoPlayerSkipMultipleFramesOnSameVSync: Boolean
+        get() = _videoPlayerSkipMultipleFramesOnSameVSync
+        set(value) {
+            _videoPlayerSkipMultipleFramesOnSameVSync = value
+            Configs.videoPlayerSkipMultipleFramesOnSameVSync = value
+        }
+
     init {
         // 删除过期的预约
         _epgChannelReserveList = EpgProgrammeReserveList(
@@ -368,5 +400,8 @@ class SettingsViewModel : ViewModel() {
         _videoPlayerUserAgent = Configs.videoPlayerUserAgent
         _videoPlayerLoadTimeout = Configs.videoPlayerLoadTimeout
         _videoPlayerAspectRatio = Configs.videoPlayerDisplayMode
+        _videoPlayerForceAudioSoftDecode = Configs.videoPlayerForceAudioSoftDecode
+        _videoPlayerRenderMode = Configs.videoPlayerRenderMode
+        _videoPlayerSkipMultipleFramesOnSameVSync = Configs.videoPlayerSkipMultipleFramesOnSameVSync
     }
 }

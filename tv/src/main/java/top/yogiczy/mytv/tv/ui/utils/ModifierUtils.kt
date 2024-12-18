@@ -6,6 +6,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -13,10 +14,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.focusRestorer
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.Key
@@ -39,7 +42,7 @@ fun Modifier.ifElse(
 
 fun Modifier.focusOnLaunched(key: Any = Unit): Modifier = composed {
     val focusRequester = remember { FocusRequester() }
-    LaunchedEffect(key) { focusRequester.requestFocus() }
+    LaunchedEffect(key) { focusRequester.saveRequestFocus() }
     focusRequester(focusRequester)
 }
 
@@ -48,7 +51,7 @@ fun Modifier.focusOnLaunchedSaveable(key: Any = Unit): Modifier = composed {
     var hasFocused by rememberSaveable(key) { mutableStateOf(false) }
     LaunchedEffect(Unit) {
         if (!hasFocused) {
-            focusRequester.requestFocus()
+            focusRequester.saveRequestFocus()
             hasFocused = true
         }
     }
@@ -56,8 +59,8 @@ fun Modifier.focusOnLaunchedSaveable(key: Any = Unit): Modifier = composed {
 }
 
 fun Modifier.handleKeyEvents(
-    onKeyTap: Map<Int, () -> Unit> = emptyMap(),
-    onKeyLongTap: Map<Int, () -> Unit> = emptyMap(),
+    onKeyTap: Map<Int, (() -> Unit)?> = emptyMap(),
+    onKeyLongTap: Map<Int, (() -> Unit)?> = emptyMap(),
 ): Modifier {
     val keyDownMap = mutableMapOf<Int, Boolean>()
 
@@ -135,9 +138,9 @@ fun Modifier.handleDragGestures(
 }
 
 fun Modifier.clickableNoIndication(
-    onLongClick: () -> Unit = { },
-    onDoubleClick: () -> Unit = { },
-    onClick: () -> Unit,
+    onLongClick: (() -> Unit)? = null,
+    onDoubleClick: (() -> Unit)? = null,
+    onClick: (() -> Unit)? = null,
 ) = composed {
     val currentOnClick by rememberUpdatedState(onClick)
     val currentOnLongClick by rememberUpdatedState(onLongClick)
@@ -145,26 +148,26 @@ fun Modifier.clickableNoIndication(
 
     pointerInput(Unit) {
         detectTapGestures(
-            onTap = { currentOnClick() },
-            onDoubleTap = { currentOnDoubleClick() },
-            onLongPress = { currentOnLongClick() }
+            onDoubleTap = currentOnDoubleClick?.let { { _ -> it() } },
+            onLongPress = currentOnLongClick?.let { { _ -> it() } },
+            onTap = currentOnClick?.let { { _ -> it() } },
         )
     }
 }
 
 fun Modifier.handleKeyEvents(
-    onLeft: () -> Unit = {},
-    onLongLeft: () -> Unit = {},
-    onRight: () -> Unit = {},
-    onLongRight: () -> Unit = {},
-    onUp: () -> Unit = {},
-    onLongUp: () -> Unit = {},
-    onDown: () -> Unit = {},
-    onLongDown: () -> Unit = {},
-    onSelect: () -> Unit = {},
-    onLongSelect: () -> Unit = {},
-    onSettings: () -> Unit = {},
-    onNumber: (Int) -> Unit = {},
+    onLeft: (() -> Unit)? = null,
+    onLongLeft: (() -> Unit)? = null,
+    onRight: (() -> Unit)? = null,
+    onLongRight: (() -> Unit)? = null,
+    onUp: (() -> Unit)? = null,
+    onLongUp: (() -> Unit)? = null,
+    onDown: (() -> Unit)? = null,
+    onLongDown: (() -> Unit)? = null,
+    onSelect: (() -> Unit)? = null,
+    onLongSelect: (() -> Unit)? = null,
+    onSettings: (() -> Unit)? = null,
+    onNumber: ((Int) -> Unit)? = null,
 ) = handleKeyEvents(
     onKeyTap = mapOf(
         KeyEvent.KEYCODE_DPAD_LEFT to onLeft,
@@ -189,16 +192,16 @@ fun Modifier.handleKeyEvents(
         KeyEvent.KEYCODE_A to onLongLeft,
         KeyEvent.KEYCODE_D to onLongRight,
 
-        KeyEvent.KEYCODE_0 to { onNumber(0) },
-        KeyEvent.KEYCODE_1 to { onNumber(1) },
-        KeyEvent.KEYCODE_2 to { onNumber(2) },
-        KeyEvent.KEYCODE_3 to { onNumber(3) },
-        KeyEvent.KEYCODE_4 to { onNumber(4) },
-        KeyEvent.KEYCODE_5 to { onNumber(5) },
-        KeyEvent.KEYCODE_6 to { onNumber(6) },
-        KeyEvent.KEYCODE_7 to { onNumber(7) },
-        KeyEvent.KEYCODE_8 to { onNumber(8) },
-        KeyEvent.KEYCODE_9 to { onNumber(9) },
+        KeyEvent.KEYCODE_0 to onNumber?.let<(Int) -> Unit, () -> Unit> { { it(0) } },
+        KeyEvent.KEYCODE_1 to onNumber?.let<(Int) -> Unit, () -> Unit> { { it(1) } },
+        KeyEvent.KEYCODE_2 to onNumber?.let<(Int) -> Unit, () -> Unit> { { it(2) } },
+        KeyEvent.KEYCODE_3 to onNumber?.let<(Int) -> Unit, () -> Unit> { { it(3) } },
+        KeyEvent.KEYCODE_4 to onNumber?.let<(Int) -> Unit, () -> Unit> { { it(4) } },
+        KeyEvent.KEYCODE_5 to onNumber?.let<(Int) -> Unit, () -> Unit> { { it(5) } },
+        KeyEvent.KEYCODE_6 to onNumber?.let<(Int) -> Unit, () -> Unit> { { it(6) } },
+        KeyEvent.KEYCODE_7 to onNumber?.let<(Int) -> Unit, () -> Unit> { { it(7) } },
+        KeyEvent.KEYCODE_8 to onNumber?.let<(Int) -> Unit, () -> Unit> { { it(8) } },
+        KeyEvent.KEYCODE_9 to onNumber?.let<(Int) -> Unit, () -> Unit> { { it(9) } },
     ).apply {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1) {
             KeyEvent.KEYCODE_SYSTEM_NAVIGATION_LEFT to onLeft
@@ -221,39 +224,39 @@ fun Modifier.handleKeyEvents(
     ),
 )
     .clickableNoIndication(
+        onClick = onSelect,
         onLongClick = onLongSelect,
         onDoubleClick = onSettings,
-        onClick = onSelect,
     )
 
 fun Modifier.handleKeyEvents(
     isFocused: () -> Boolean,
     focusRequester: FocusRequester,
-    onLeft: () -> Unit = {},
-    onLongLeft: () -> Unit = {},
-    onRight: () -> Unit = {},
-    onLongRight: () -> Unit = {},
-    onUp: () -> Unit = {},
-    onLongUp: () -> Unit = {},
-    onDown: () -> Unit = {},
-    onLongDown: () -> Unit = {},
-    onSelect: () -> Unit = {},
-    onLongSelect: () -> Unit = {},
-    onSettings: () -> Unit = {},
-    onNumber: (Int) -> Unit = {},
+    onLeft: (() -> Unit)? = null,
+    onLongLeft: (() -> Unit)? = null,
+    onRight: (() -> Unit)? = null,
+    onLongRight: (() -> Unit)? = null,
+    onUp: (() -> Unit)? = null,
+    onLongUp: (() -> Unit)? = null,
+    onDown: (() -> Unit)? = null,
+    onLongDown: (() -> Unit)? = null,
+    onSelect: (() -> Unit)? = null,
+    onLongSelect: (() -> Unit)? = null,
+    onSettings: (() -> Unit)? = null,
+    onNumber: ((Int) -> Unit)? = null,
 ) = handleKeyEvents(
-    onLeft = { if (isFocused()) onLeft() else focusRequester.requestFocus() },
-    onLongLeft = { if (isFocused()) onLongLeft() else focusRequester.requestFocus() },
-    onRight = { if (isFocused()) onRight() else focusRequester.requestFocus() },
-    onLongRight = { if (isFocused()) onLongRight() else focusRequester.requestFocus() },
-    onUp = { if (isFocused()) onUp() else focusRequester.requestFocus() },
-    onLongUp = { if (isFocused()) onLongUp() else focusRequester.requestFocus() },
-    onDown = { if (isFocused()) onDown() else focusRequester.requestFocus() },
-    onLongDown = { if (isFocused()) onLongDown() else focusRequester.requestFocus() },
-    onSelect = { if (isFocused()) onSelect() else focusRequester.requestFocus() },
-    onLongSelect = { if (isFocused()) onLongSelect() else focusRequester.requestFocus() },
-    onSettings = { if (isFocused()) onSettings() else focusRequester.requestFocus() },
-    onNumber = { if (isFocused()) onNumber(it) else focusRequester.requestFocus() },
+    onLeft = onLeft?.let { { if (isFocused()) it() else focusRequester.saveRequestFocus() } },
+    onLongLeft = onLongLeft?.let { { if (isFocused()) it() else focusRequester.saveRequestFocus() } },
+    onRight = onRight?.let { { if (isFocused()) it() else focusRequester.saveRequestFocus() } },
+    onLongRight = onLongRight?.let { { if (isFocused()) it() else focusRequester.saveRequestFocus() } },
+    onUp = onUp?.let { { if (isFocused()) it() else focusRequester.saveRequestFocus() } },
+    onLongUp = onLongUp?.let { { if (isFocused()) it() else focusRequester.saveRequestFocus() } },
+    onDown = onDown?.let { { if (isFocused()) it() else focusRequester.saveRequestFocus() } },
+    onLongDown = onLongDown?.let { { if (isFocused()) it() else focusRequester.saveRequestFocus() } },
+    onSelect = onSelect?.let { { if (isFocused()) it() else focusRequester.saveRequestFocus() } },
+    onLongSelect = onLongSelect?.let { { if (isFocused()) it() else focusRequester.saveRequestFocus() } },
+    onSettings = onSettings?.let { { if (isFocused()) it() else focusRequester.saveRequestFocus() } },
+    onNumber = onNumber?.let { { num -> if (isFocused()) it(num) else focusRequester.saveRequestFocus() } },
 )
 
 fun Modifier.captureBackKey(onBackPressed: () -> Unit) = this.onPreviewKeyEvent {
@@ -274,3 +277,21 @@ fun Modifier.customBackground() = background(
         ),
     )
 )
+
+@Composable
+@OptIn(ExperimentalComposeUiApi::class)
+fun Modifier.saveFocusRestorer(onRestoreFailed: (() -> FocusRequester)? = null): Modifier {
+    if (!Configs.uiFocusOptimize) return this
+
+    return focusRestorer {
+        if (onRestoreFailed == null) return@focusRestorer FocusRequester.Default
+
+        val result = onRestoreFailed()
+        runCatching {
+            result.requestFocus()
+            result
+        }.getOrElse { FocusRequester.Default }
+    }
+}
+
+fun FocusRequester.saveRequestFocus() = runCatching { requestFocus() }

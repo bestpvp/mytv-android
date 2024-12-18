@@ -19,6 +19,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.tv.material3.MaterialTheme
 import top.yogiczy.mytv.tv.ui.utils.captureBackKey
 import top.yogiczy.mytv.tv.ui.utils.ifElse
+import top.yogiczy.mytv.tv.ui.utils.saveRequestFocus
 import java.util.UUID
 
 class PopupManager {
@@ -57,7 +58,7 @@ fun Modifier.popupable() = composed {
     val focusRequester = remember { FocusRequester() }
 
     DisposableEffect(Unit) {
-        focusRequester.requestFocus()
+        focusRequester.saveRequestFocus()
         popupManager.push(focusRequester)
         onDispose { popupManager.pop() }
     }

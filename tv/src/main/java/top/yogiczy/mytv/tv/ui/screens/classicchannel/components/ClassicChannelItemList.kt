@@ -19,6 +19,7 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
@@ -29,9 +30,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.focus.focusRestorer
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.tv.material3.DenseListItem
@@ -39,6 +40,7 @@ import androidx.tv.material3.ListItemDefaults
 import androidx.tv.material3.MaterialTheme
 import androidx.tv.material3.Text
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.launch
 import top.yogiczy.mytv.core.data.entities.channel.Channel
 import top.yogiczy.mytv.core.data.entities.channel.ChannelGroup
 import top.yogiczy.mytv.core.data.entities.channel.ChannelList
@@ -52,6 +54,8 @@ import top.yogiczy.mytv.tv.ui.screens.settings.LocalSettings
 import top.yogiczy.mytv.tv.ui.theme.MyTVTheme
 import top.yogiczy.mytv.tv.ui.utils.handleKeyEvents
 import top.yogiczy.mytv.tv.ui.utils.ifElse
+import top.yogiczy.mytv.tv.ui.utils.saveFocusRestorer
+import top.yogiczy.mytv.tv.ui.utils.saveRequestFocus
 import kotlin.math.max
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -99,6 +103,23 @@ fun ClassicChannelItemList(
             .collect { _ -> onUserAction() }
     }
 
+    val coroutineScope = rememberCoroutineScope()
+    val firstFocusRequester = remember { FocusRequester() }
+    val lastFocusRequester = remember { FocusRequester() }
+    fun scrollToFirst() {
+        coroutineScope.launch {
+            listState.scrollToItem(0)
+            firstFocusRequester.saveRequestFocus()
+        }
+    }
+
+    fun scrollToLast() {
+        coroutineScope.launch {
+            listState.scrollToItem(channelList.lastIndex)
+            lastFocusRequester.saveRequestFocus()
+        }
+    }
+
     LazyColumn(
         modifier = modifier
             .fillMaxHeight()
@@ -106,7 +127,9 @@ fun ClassicChannelItemList(
             .background(MaterialTheme.colorScheme.surface.copy(0.8f))
             .ifElse(
                 LocalSettings.current.uiFocusOptimize,
-                Modifier.focusRestorer { itemFocusRequesterList[channelList.indexOf(focusedChannel)] },
+                Modifier.saveFocusRestorer {
+                    itemFocusRequesterList[channelList.indexOf(focusedChannel)]
+                },
             ),
         state = listState,
         contentPadding = PaddingValues(8.dp),
@@ -119,6 +142,19 @@ fun ClassicChannelItemList(
             }
 
             ClassicChannelItem(
+                modifier = Modifier
+                    .ifElse(
+                        index == 0,
+                        Modifier
+                            .focusRequester(firstFocusRequester)
+                            .handleKeyEvents(onUp = { scrollToLast() })
+                    )
+                    .ifElse(
+                        index == channelList.lastIndex,
+                        Modifier
+                            .focusRequester(lastFocusRequester)
+                            .handleKeyEvents(onDown = { scrollToFirst() })
+                    ),
                 channelProvider = { channel },
                 onChannelSelected = { onChannelSelected(channel) },
                 onChannelFavoriteToggle = {
@@ -176,7 +212,7 @@ private fun ClassicChannelItem(
     LaunchedEffect(Unit) {
         if (initialFocusedProvider()) {
             onInitialFocused()
-            focusRequester.requestFocus()
+            focusRequester.saveRequestFocus()
         }
     }
 
@@ -227,6 +263,7 @@ private fun ClassicChannelItem(
                     Text(
                         text = nowEpgProgramme?.title ?: "无节目",
                         maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
                         modifier = Modifier.ifElse(isFocused, Modifier.basicMarquee()),
                     )
                 },

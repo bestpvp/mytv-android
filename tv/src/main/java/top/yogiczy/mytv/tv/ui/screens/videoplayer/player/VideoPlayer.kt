@@ -1,6 +1,7 @@
 package top.yogiczy.mytv.tv.ui.screens.videoplayer.player
 
 import android.view.SurfaceView
+import android.view.TextureView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -35,6 +36,7 @@ abstract class VideoPlayer(
     }
 
     abstract fun setVideoSurfaceView(surfaceView: SurfaceView)
+    abstract fun setVideoTextureView(textureView: TextureView)
 
     private var loadTimeoutJob: Job? = null
     private var interruptJob: Job? = null
